@@ -3,42 +3,43 @@ const
     path = require('path'),
     old = process.argv.find(el => el === '--env.old') ? '-old' : '',
     targets = {
-    targets: old ?
-        {
-            ie: '9'
-        } :
-        {
-            chrome: 62,
-            firefox: 56,
-            edge: 16,
-            safari: 11,
-            opera: 48,
-        }
+        targets: old ?
+            {
+                // css will fail on ie < 11 - no point to support them
+                ie: '11'
+            } :
+            {
+                chrome: 62,
+                firefox: 56,
+                edge: 16,
+                safari: 11,
+                opera: 48,
+            }
     },
     include = [
         path.resolve(__dirname, 'client')
     ],
     babelLoader = {
-    loader: 'babel-loader',
-    options: {
-        presets: [
-            ['env', targets]
-        ]
-    },
+        loader: 'babel-loader',
+        options: {
+            presets: [
+                ['env', targets]
+            ]
+        },
     }
     ;
 
-    module.exports = {
-        entry: {
-            app: path.resolve(__dirname, 'client', 'app.tsx'),
-        },
+module.exports = {
+    entry: {
+        app: path.resolve(__dirname, 'client', 'app.tsx'),
+    },
 
-        output: {
-            path: path.resolve(__dirname, 'public'),
-            filename: `app.js`,
-        },
+    output: {
+        path: path.resolve(__dirname, 'public'),
+        filename: `app.js`,
+    },
 
-        module: {
+    module: {
         rules: [
             {
                 test: /\.js$/,
@@ -48,12 +49,12 @@ const
             {
                 test: /\.tsx?$/,
                 include,
-                    use: [
-                        babelLoader,
-                        {
-                            loader: 'ts-loader'
-                        }
-                    ]
+                use: [
+                    babelLoader,
+                    {
+                        loader: 'ts-loader'
+                    }
+                ]
             },
             {
                 test: /\.png/,
@@ -67,57 +68,58 @@ const
                 use: [
                     { loader: 'style-loader' },
                     { loader: 'css-loader' },
-                    { loader: 'sass-loader'}
+                    { loader: 'sass-loader' }
                 ]
             }
         ]
-        },
+    },
 
-        resolve: {
-            modules: [
-                'node_modules',
-                path.resolve(__dirname, 'client')
-            ],
+    resolve: {
+        modules: [
+            'node_modules',
+            path.resolve(__dirname),
+        ],
+        alias: {},
 
-            extensions: ['.js', '.jsx', '.ts', '.tsx', '.css'],
-        },
+        extensions: ['.js', '.jsx', '.ts', '.tsx', '.css'],
+    },
 
-        performance: {
-            hints: 'warning',
-            maxAssetSize: 200000,
-            maxEntrypointSize: 400000,
-            assetFilter: function (assetFilename) {
-                return assetFilename.endsWith('.css') || assetFilename.endsWith('.js');
-            }
-        },
+    performance: {
+        hints: 'warning',
+        maxAssetSize: 200000,
+        maxEntrypointSize: 400000,
+        assetFilter: function (assetFilename) {
+            return assetFilename.endsWith('.css') || assetFilename.endsWith('.js');
+        }
+    },
 
-        devtool: false,
+    devtool: false,
 
-        context: __dirname,
+    context: __dirname,
 
-        target: 'web',
+    target: 'web',
 
-        externals: [],
+    externals: [],
 
-        stats: {
-            colors: true,
-            hash: true,
-            version: true,
-            timings: true,
-            assets: true,
-            chunks: true,
-            modules: false,
-            reasons: false,
-            children: false,
-            source: true,
-            errors: true,
-            errorDetails: true,
-            warnings: true,
-            publicPath: true
-        },
+    stats: {
+        colors: true,
+        hash: true,
+        version: true,
+        timings: true,
+        assets: true,
+        chunks: true,
+        modules: false,
+        reasons: false,
+        children: false,
+        source: true,
+        errors: true,
+        errorDetails: true,
+        warnings: true,
+        publicPath: true
+    },
 
-        plugins: [],
+    plugins: [],
 
-        externals: { },
+    externals: {},
 
-    }
+}
