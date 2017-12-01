@@ -1,28 +1,28 @@
-import { IDocumentList } from 'client/types/state';
+import { IActiveDocument } from 'client/types/state';
 import { ELoadStatus } from 'client/types/enums';
-import { EDocumentListAction, DocumentListAction } from 'client/types/actions';
+import { EActiveDocumentAction, ActiveDocumentAction } from 'client/types/actions';
 
-export const documentList = (state: IDocumentList = getDefaultDocumentList(), action: DocumentListAction): IDocumentList => {
-    let newState: IDocumentList;
+export const activeDocument = (state: IActiveDocument = getDefaultDocumentList(), action: ActiveDocumentAction): IActiveDocument => {
+    let newState: IActiveDocument;
 
     switch (action.type) {
-        case EDocumentListAction.LOAD_START: {
+        case EActiveDocumentAction.LOAD_START: {
             newState = {
-                data: [],
+                data: null,
                 error: null,
                 status: ELoadStatus.RUNNING,
             };
             break;
         }
-        case EDocumentListAction.LOAD_ERROR: {
+        case EActiveDocumentAction.LOAD_ERROR: {
             newState = {
-                data: [],
+                data: null,
                 error: action.payload,
                 status: ELoadStatus.ERROR,
             };
             break;
         }
-        case EDocumentListAction.LOAD_SUCCESS: {
+        case EActiveDocumentAction.LOAD_SUCCESS: {
             newState = {
                 data: action.payload,
                 error: null,
@@ -38,9 +38,9 @@ export const documentList = (state: IDocumentList = getDefaultDocumentList(), ac
     return newState;
 }
 
-export function getDefaultDocumentList(): IDocumentList {
+export function getDefaultDocumentList(): IActiveDocument {
     return {
-        data: [],
+        data: null,
         error: null,
         status: ELoadStatus.IDLE,
     };

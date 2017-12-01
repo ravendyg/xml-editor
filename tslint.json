@@ -30,6 +30,8 @@
         true,
         "check-whitespace"
       ],
+      "ordered-imports": true,
+      "member-ordering": true,
       "quotemark": [false, "single"],
       "semicolon": true,
       "triple-equals": [true, "allow-null-check"],

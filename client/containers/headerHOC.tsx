@@ -31,7 +31,7 @@ const mapDispatchToProps = (): IDispatchProps => ({
 
 });
 
-const mergeProps= (stateProps: IStateProps, dispatchProps: IDispatchProps): IProps => ({
+const mergeProps = (stateProps: IStateProps, dispatchProps: IDispatchProps): IProps => ({
     ...stateProps,
     ...dispatchProps
 });

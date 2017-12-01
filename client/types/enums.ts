@@ -1,6 +1,6 @@
 export const enum ELoadStatus {
-    LOADING = 'LOADING',
-    SUCCEESS = 'SUCCEESS',
+    RUNNING = 'RUNNING',
+    IDLE = 'IDLE',
     ERROR = 'ERROR',
 }
 

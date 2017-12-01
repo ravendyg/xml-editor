@@ -1,6 +1,6 @@
 import { AnyAction } from 'redux';
 
-import {DocumentInfo} from 'client/types/dataTypes';
+import { DocumentInfo } from 'client/types/dataTypes';
 import { IError } from 'client/types/dataTypes';
 
 export declare type Dispatch = (action: IAction<any, any>) => void;
@@ -11,13 +11,26 @@ export interface IAction<T, P> extends AnyAction {
 }
 
 export const enum EDocumentListAction {
-    DOCUMENT_LIST_LOAD_START = 'DOCUMENT_LIST_LOAD_START',
-    DOCUMENT_LIST_LOAD_SUCCESS = 'DOCUMENT_LIST_LOAD_SUCCESS',
-    DOCUMENT_LIST_LOAD_ERROR = 'DOCUMENT_LIST_LOAD_ERROR',
+    LOAD_START = 'DOCUMENT_LIST_LOAD_START',
+    LOAD_SUCCESS = 'DOCUMENT_LIST_LOAD_SUCCESS',
+    LOAD_ERROR = 'DOCUMENT_LIST_LOAD_ERROR',
 }
 
 export declare type DocumentListAction =
-    IAction<EDocumentListAction.DOCUMENT_LIST_LOAD_START, null>
-    | IAction<EDocumentListAction.DOCUMENT_LIST_LOAD_SUCCESS, DocumentInfo []>
-    | IAction<EDocumentListAction.DOCUMENT_LIST_LOAD_ERROR, IError>
+    IAction<EDocumentListAction.LOAD_START, null>
+    | IAction<EDocumentListAction.LOAD_SUCCESS, DocumentInfo []>
+    | IAction<EDocumentListAction.LOAD_ERROR, IError>
     ;
+
+export const enum EActiveDocumentAction {
+    LOAD_START = 'LOAD_START',
+    LOAD_SUCCESS = 'LOAD_SUCCESS',
+    LOAD_ERROR = 'LOAD_ERROR',
+}
+
+export declare type ActiveDocumentAction =
+    IAction<EActiveDocumentAction.LOAD_START, null>
+    | IAction<EActiveDocumentAction.LOAD_SUCCESS, DocumentInfo>
+    | IAction<EActiveDocumentAction.LOAD_ERROR, IError>
+    ;
+
