@@ -10,12 +10,16 @@
   "dependencies": {
     "body-parser": "~1.18.2",
     "cookie-parser": "~1.4.3",
+    "css-loader": "^0.28.7",
     "express": "~4.15.5",
     "morgan": "git+https://github.com/ravendyg/morgan.git",
+    "node-sass": "^4.7.2",
     "react": "^16.1.1",
     "react-dom": "^16.1.1",
     "react-redux": "^5.0.6",
     "redux": "^3.7.2",
+    "sass-loader": "^6.0.6",
+    "style-loader": "^0.19.0",
     "ts-loader": "^3.1.1",
     "typescript": "^2.6.2"
   },

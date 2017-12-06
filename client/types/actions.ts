@@ -1,9 +1,7 @@
 import { AnyAction } from 'redux';
 
-import { DocumentInfo } from 'client/types/dataTypes';
+import { DocumentInfo, CompleteDocument } from 'client/types/dataTypes';
 import { IError } from 'client/types/dataTypes';
-
-export declare type Dispatch = (action: IAction<any, any>) => void;
 
 export interface IAction<T, P> extends AnyAction {
     type: T;
@@ -22,15 +20,24 @@ export declare type DocumentListAction =
     | IAction<EDocumentListAction.LOAD_ERROR, IError>
     ;
 
-export const enum EActiveDocumentAction {
-    LOAD_START = 'LOAD_START',
-    LOAD_SUCCESS = 'LOAD_SUCCESS',
-    LOAD_ERROR = 'LOAD_ERROR',
+export const enum ELoadDocumentAction {
+    LOAD_START = 'DOCUMENT_LOAD_START',
+    LOAD_SUCCESS = 'DOCUMENT_LOAD_SUCCESS',
+    LOAD_ERROR = 'DOCUMENT_LOAD_ERROR',
 }
 
-export declare type ActiveDocumentAction =
-    IAction<EActiveDocumentAction.LOAD_START, null>
-    | IAction<EActiveDocumentAction.LOAD_SUCCESS, DocumentInfo>
-    | IAction<EActiveDocumentAction.LOAD_ERROR, IError>
+export declare type LoadDocumentAction =
+    IAction<ELoadDocumentAction.LOAD_START, null>
+    | IAction<ELoadDocumentAction.LOAD_SUCCESS, CompleteDocument>
+    | IAction<ELoadDocumentAction.LOAD_ERROR, IError>
     ;
 
+export const enum ECashDocuments {
+    ADD_DOCUMENT = 'CASH_ADD_DOCUMENT',
+    REMOVE_DOCUMENT = 'CASH_REMOVE_DOCUMENT',
+}
+
+export declare type CashDocumentsAction =
+    IAction<ECashDocuments.ADD_DOCUMENT, CompleteDocument>
+    | IAction<ECashDocuments.REMOVE_DOCUMENT, string>
+    ;

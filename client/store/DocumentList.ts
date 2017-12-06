@@ -2,7 +2,10 @@ import { IDocumentList } from 'client/types/state';
 import { ELoadStatus } from 'client/types/enums';
 import { EDocumentListAction, DocumentListAction } from 'client/types/actions';
 
-export const documentList = (state: IDocumentList = getDefaultDocumentList(), action: DocumentListAction): IDocumentList => {
+export const documentList = (
+    state: IDocumentList = getDefaultDocumentList(),
+    action: DocumentListAction,
+): IDocumentList => {
     let newState: IDocumentList;
 
     switch (action.type) {

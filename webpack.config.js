@@ -115,10 +115,16 @@ module.exports = {
         errors: true,
         errorDetails: true,
         warnings: true,
-        publicPath: true
+        publicPath: true,
     },
 
-    plugins: [],
+    plugins: [
+        new webpack.DefinePlugin({
+            'process.env': {
+                'BROWSER': true,
+            },
+        }),
+    ],
 
     externals: {},
 

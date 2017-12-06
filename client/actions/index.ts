@@ -1,25 +1,65 @@
-import { Dispatch } from 'client/types/actions';
-import { IDocumentListService } from 'client/types/services';
-import { EDocumentListAction } from 'client/types/actions';
+import { IDocumentService } from 'client/types/services';
+import { EDocumentListAction, ELoadDocumentAction, ECashDocuments } from 'client/types/actions';
+import { IStore } from 'client/types/state';
+import { CompleteDocument } from 'client/types/dataTypes';
 
-export const createActions = (dispatch: Dispatch, documentListService: IDocumentListService) => ({
+export interface IActions {
+    loadDocumentList: () => Promise<void>;
+    selectDocument: (docId: string) => Promise<void>;
+}
+
+export const createActions = (store: IStore, documentService: IDocumentService): IActions => ({
     loadDocumentList() {
-        dispatch({
+        store.dispatch({
             type: EDocumentListAction.LOAD_START,
             payload: null,
         });
-        documentListService.getDocumentList()
+        return documentService.getDocumentList()
         .then(documents => {
-            dispatch({
+            store.dispatch({
                 type: EDocumentListAction.LOAD_SUCCESS,
                 payload: documents,
             });
         })
         .catch(error => {
-            dispatch({
+            debugger
+            store.dispatch({
                 type: EDocumentListAction.LOAD_ERROR,
                 payload: error,
             });
         });
-    }
+    },
+
+    selectDocument(docId: string) {
+        const cashedDoc: CompleteDocument = store.getState().cashDocument[docId];
+        if (cashedDoc) {
+            store.dispatch({
+                type: ELoadDocumentAction.LOAD_SUCCESS,
+                payload: cashedDoc,
+            });
+            return Promise.resolve();
+        } else {
+            store.dispatch({
+                type: ELoadDocumentAction.LOAD_START,
+                payload: null,
+            });
+            return documentService.getCompleteDocument(docId)
+            .then(doc => {
+                store.dispatch({
+                    type: ELoadDocumentAction.LOAD_SUCCESS,
+                    payload: doc,
+                });
+                store.dispatch({
+                    type: ECashDocuments.ADD_DOCUMENT,
+                    payload: doc,
+                });
+            })
+            .catch(error => {
+                store.dispatch({
+                    type: ELoadDocumentAction.LOAD_ERROR,
+                    payload: error,
+                });
+            });
+        }
+    },
 });
