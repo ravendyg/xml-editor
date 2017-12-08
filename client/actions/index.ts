@@ -1,7 +1,7 @@
 import { IDocumentService } from 'client/types/services';
 import { EDocumentListAction, ELoadDocumentAction, ECashDocuments } from 'client/types/actions';
 import { IStore } from 'client/types/state';
-import { CompleteDocument } from 'client/types/dataTypes';
+import { TCompleteDocument } from 'client/types/dataTypes';
 
 export interface IActions {
     loadDocumentList: () => Promise<void>;
@@ -31,7 +31,7 @@ export const createActions = (store: IStore, documentService: IDocumentService):
     },
 
     selectDocument(docId: string) {
-        const cashedDoc: CompleteDocument = store.getState().cashDocument[docId];
+        const cashedDoc: TCompleteDocument = store.getState().cashDocument[docId];
         if (cashedDoc) {
             store.dispatch({
                 type: ELoadDocumentAction.LOAD_SUCCESS,
@@ -43,7 +43,7 @@ export const createActions = (store: IStore, documentService: IDocumentService):
                 type: ELoadDocumentAction.LOAD_START,
                 payload: null,
             });
-            return documentService.getCompleteDocument(docId)
+            return documentService.getTCompleteDocument(docId)
             .then(doc => {
                 store.dispatch({
                     type: ELoadDocumentAction.LOAD_SUCCESS,

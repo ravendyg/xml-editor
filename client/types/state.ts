@@ -1,9 +1,9 @@
 import { Store } from 'redux';
 
-import { DocumentInfo, CompleteDocument } from 'client/types/dataTypes';
+import { TDocumentInfo, TCompleteDocument } from 'client/types/dataTypes';
 import { ELoadStatus } from 'client/types/enums';
 import { IError } from 'client/types/dataTypes';
-import { Dispatch as Disp } from 'redux';
+import { Dispatch } from 'redux';
 
 export interface IStore extends Store<IState> {}
 
@@ -13,33 +13,33 @@ export interface IState {
     cashDocument: ICashDocument;
 }
 
-export declare type Dispatch = Disp<IState>;
+export declare type TDispatch = Dispatch<IState>;
 
 /**
- * @prop {DocumentInfo []} data List of available document
+ * @prop {TDocumentInfo []} data List of available document
  * @prop {IError | null} error
  * @prop {ELoadStatus} status Request status
  */
 export interface IDocumentList {
-    data: DocumentInfo [];
+    data: TDocumentInfo [];
     error: IError | null;
     status: ELoadStatus;
 }
 
 /**
- * @prop {CompleteDocument} data Loaded document
+ * @prop {TCompleteDocument} data Loaded document
  * @prop {IError | null} error
  * @prop {ELoadStatus} status Request status
  */
 export interface IActiveDocument {
-    data: CompleteDocument | null;
+    data: TCompleteDocument | null;
     error: IError | null;
     status: ELoadStatus;
 }
 
 /**
- * @prop {CompleteDocument} docId
+ * @prop {TCompleteDocument} docId
  */
 export interface ICashDocument {
-    [docId: string]: CompleteDocument;
+    [docId: string]: TCompleteDocument;
 }

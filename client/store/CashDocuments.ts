@@ -2,7 +2,7 @@ import { ICashDocument } from 'client/types/state';
 import { ECashDocuments, CashDocumentsAction } from 'client/types/actions';
 
 export const cashDocument = (
-    state: ICashDocument = getDefaultCompleteDocuments(),
+    state: ICashDocument = getDefaultTCompleteDocuments(),
     action: CashDocumentsAction,
 ): ICashDocument => {
     let newState: ICashDocument;
@@ -31,7 +31,7 @@ export const cashDocument = (
     return newState;
 }
 
-export function getDefaultCompleteDocuments(): ICashDocument {
+export function getDefaultTCompleteDocuments(): ICashDocument {
     return {
     };
 }

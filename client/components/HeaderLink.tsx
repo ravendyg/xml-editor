@@ -1,9 +1,9 @@
 import * as React from 'react';
 
-import { DocumentInfo } from 'client/types/dataTypes';
+import { TDocumentInfo } from 'client/types/dataTypes';
 
 interface IProps {
-    doc: DocumentInfo;
+    doc: TDocumentInfo;
     handleSelect: (docId: string) => void;
 }
 

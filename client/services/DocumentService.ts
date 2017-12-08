@@ -1,5 +1,5 @@
 import { IDocumentService } from 'client/types/services';
-import { DocumentInfo, CompleteDocument } from 'client/types/dataTypes';
+import { TDocumentInfo, TCompleteDocument } from 'client/types/dataTypes';
 
 const docList = [
     {
@@ -12,7 +12,7 @@ const docList = [
     },
 ];
 
-const docs: {[key: string]: CompleteDocument} = {
+const docs: {[key: string]: TCompleteDocument} = {
     doc1: {
         id: 'doc1',
         name: 'document 1',
@@ -24,7 +24,7 @@ const docs: {[key: string]: CompleteDocument} = {
 }
 
 export const documentService: IDocumentService = {
-    getDocumentList(): Promise<DocumentInfo []> {
+    getDocumentList(): Promise<TDocumentInfo []> {
         // TODO: replace with an actual call to the server
         return new Promise((resolve) => {
             setTimeout(() => {
@@ -33,7 +33,7 @@ export const documentService: IDocumentService = {
         });
     },
 
-    getCompleteDocument(docId: string): Promise<CompleteDocument> {
+    getTCompleteDocument(docId: string): Promise<TCompleteDocument> {
         return new Promise((resolve) => {
             setTimeout(() => {
                 resolve(docs[docId]);

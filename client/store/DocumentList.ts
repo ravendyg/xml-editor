@@ -1,10 +1,10 @@
 import { IDocumentList } from 'client/types/state';
 import { ELoadStatus } from 'client/types/enums';
-import { EDocumentListAction, DocumentListAction } from 'client/types/actions';
+import { EDocumentListAction, TDocumentListAction } from 'client/types/actions';
 
 export const documentList = (
     state: IDocumentList = getDefaultDocumentList(),
-    action: DocumentListAction,
+    action: TDocumentListAction,
 ): IDocumentList => {
     let newState: IDocumentList;
 

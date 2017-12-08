@@ -1,12 +1,11 @@
 import { EErrorCodes } from 'client/types/enums';
 
-
 /**
  * List of available documents
  *
  * @prop {string} name File name
  */
-export declare type DocumentInfo = {
+export declare type TDocumentInfo = {
     id: string;
     name: string;
 };
@@ -14,11 +13,10 @@ export declare type DocumentInfo = {
 /**
  * Complete document
  */
-export declare type CompleteDocument = {
+export declare type TCompleteDocument = {
     id: string;
     name: string;
 };
-
 
 /**
  * Custom error

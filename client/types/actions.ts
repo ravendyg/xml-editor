@@ -1,6 +1,6 @@
 import { AnyAction } from 'redux';
 
-import { DocumentInfo, CompleteDocument } from 'client/types/dataTypes';
+import { TDocumentInfo, TCompleteDocument } from 'client/types/dataTypes';
 import { IError } from 'client/types/dataTypes';
 
 export interface IAction<T, P> extends AnyAction {
@@ -14,9 +14,9 @@ export const enum EDocumentListAction {
     LOAD_ERROR = 'DOCUMENT_LIST_LOAD_ERROR',
 }
 
-export declare type DocumentListAction =
+export declare type TDocumentListAction =
     IAction<EDocumentListAction.LOAD_START, null>
-    | IAction<EDocumentListAction.LOAD_SUCCESS, DocumentInfo []>
+    | IAction<EDocumentListAction.LOAD_SUCCESS, TDocumentInfo []>
     | IAction<EDocumentListAction.LOAD_ERROR, IError>
     ;
 
@@ -28,7 +28,7 @@ export const enum ELoadDocumentAction {
 
 export declare type LoadDocumentAction =
     IAction<ELoadDocumentAction.LOAD_START, null>
-    | IAction<ELoadDocumentAction.LOAD_SUCCESS, CompleteDocument>
+    | IAction<ELoadDocumentAction.LOAD_SUCCESS, TCompleteDocument>
     | IAction<ELoadDocumentAction.LOAD_ERROR, IError>
     ;
 
@@ -38,6 +38,6 @@ export const enum ECashDocuments {
 }
 
 export declare type CashDocumentsAction =
-    IAction<ECashDocuments.ADD_DOCUMENT, CompleteDocument>
+    IAction<ECashDocuments.ADD_DOCUMENT, TCompleteDocument>
     | IAction<ECashDocuments.REMOVE_DOCUMENT, string>
     ;
