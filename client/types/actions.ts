@@ -1,6 +1,9 @@
 import { AnyAction } from 'redux';
 
-import { TDocumentInfo, TCompleteDocument } from 'client/types/dataTypes';
+import {
+    TCompleteDocument,
+    TDocumentInfo,
+} from 'client/types/dataTypes';
 import { IError } from 'client/types/dataTypes';
 
 export interface IAction<T, P> extends AnyAction {

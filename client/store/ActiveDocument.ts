@@ -1,6 +1,9 @@
-import { IActiveDocument } from 'client/types/state';
+import {
+    ELoadDocumentAction,
+    LoadDocumentAction,
+} from 'client/types/actions';
 import { ELoadStatus } from 'client/types/enums';
-import { ELoadDocumentAction, LoadDocumentAction } from 'client/types/actions';
+import { IActiveDocument } from 'client/types/state';
 
 export const activeDocument = (
     state: IActiveDocument = getDefaultDocumentList(),
@@ -39,12 +42,12 @@ export const activeDocument = (
     }
 
     return newState;
-}
+};
 
 export function getDefaultDocumentList(): IActiveDocument {
     return {
         data: null,
         error: null,
-        status: ELoadStatus.IDLE,
+        status: ELoadStatus.RUNNING,
     };
 }

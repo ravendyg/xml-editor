@@ -1,5 +1,8 @@
+import {
+    TCompleteDocument,
+    TDocumentInfo,
+} from 'client/types/dataTypes';
 import { IDocumentService } from 'client/types/services';
-import { TDocumentInfo, TCompleteDocument } from 'client/types/dataTypes';
 
 const docList = [
     {
@@ -16,12 +19,26 @@ const docs: {[key: string]: TCompleteDocument} = {
     doc1: {
         id: 'doc1',
         name: 'document 1',
+        model: {
+            'root': {
+                name: 'document',
+                attrs: [],
+                children: [],
+            },
+        },
     },
     doc2: {
         id: 'doc2',
         name: 'document 2',
+        model: {
+            'root': {
+                name: 'document',
+                attrs: [],
+                children: [],
+            },
+        },
     },
-}
+};
 
 export const documentService: IDocumentService = {
     getDocumentList(): Promise<TDocumentInfo []> {

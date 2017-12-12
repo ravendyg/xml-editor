@@ -1,4 +1,7 @@
-import { TDocumentInfo, TCompleteDocument } from 'client/types/dataTypes';
+import {
+    TCompleteDocument,
+    TDocumentInfo,
+} from 'client/types/dataTypes';
 
 export interface IDocumentService {
     getDocumentList: () => Promise<TDocumentInfo []>;

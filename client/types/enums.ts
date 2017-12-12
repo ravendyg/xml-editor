@@ -1,7 +1,7 @@
 export const enum ELoadStatus {
-    RUNNING = 'RUNNING',
-    IDLE = 'IDLE',
     ERROR = 'ERROR',
+    IDLE = 'IDLE',
+    RUNNING = 'RUNNING',
 }
 
 export const enum EErrorCodes {

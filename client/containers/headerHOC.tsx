@@ -1,11 +1,14 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 
-import { IState, IDocumentList } from 'client/types/state';
-import { ELoadStatus } from 'client/types/enums';
-import { Spinner } from 'client/components/Spinner'
-import { HeaderLink } from 'client/components/HeaderLink'
 import { IActions } from 'client/actions';
+import { HeaderLink } from 'client/components/HeaderLink';
+import { Spinner } from 'client/components/Spinner';
+import { ELoadStatus } from 'client/types/enums';
+import {
+    IDocumentList,
+    IState,
+} from 'client/types/state';
 
 interface IOwnProps {
     actions: IActions;

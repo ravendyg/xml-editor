@@ -2,14 +2,16 @@ import * as React from 'react';
 import {render} from 'react-dom';
 import { Provider } from 'react-redux';
 
+import { createActions } from 'client/actions';
 import { HeaderHOC } from 'client/containers/HeaderHOC';
 import { ViewHOC } from 'client/containers/ViewHOC';
-import { store } from 'client/store';
 import { documentService } from 'client/services/DocumentService';
-import { createActions } from 'client/actions';
+import { store } from 'client/store';
 
 try {
-    process.env.BROWSER && require('./styles.scss');
+    if (process.env.BROWSER) {
+        require('./styles.scss');
+    }
 } catch (e) {/**/}
 
 const actions = createActions(store, documentService);

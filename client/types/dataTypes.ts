@@ -11,11 +11,41 @@ export declare type TDocumentInfo = {
 };
 
 /**
+ * Node attribute
+ *
+ * @prop {string} name
+ * @prop {string} value
+ */
+export declare type TAttribute = {
+    name: string;
+    value: string;
+};
+
+/**
+ * Node === tag
+ *
+ * @prop {string} name Like div, span, etc.
+ * @prop {TAttribute[]} attrs
+ * @prop {string[]} children Children ids
+ */
+export declare type TNode = {
+    name: string;
+    attrs: TAttribute[];
+    children: string[];
+};
+
+/**
  * Complete document
+ *
+ * @prop {string} id Unique identifier
+ * @prop {string} name Human readable
  */
 export declare type TCompleteDocument = {
     id: string;
     name: string;
+    model: {
+        [key: string]: TNode;
+    };
 };
 
 /**
