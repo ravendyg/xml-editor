@@ -12,13 +12,14 @@ export declare type TDocumentInfo = {
 
 /**
  * Node attribute
+ * using [key: string]: value would be less verbose, but would require additional checks for whether attribute has one value
  *
  * @prop {string} name
- * @prop {string} value
+ * @prop {string} [value]
  */
 export declare type TAttribute = {
     name: string;
-    value: string;
+    value?: string;
 };
 
 /**

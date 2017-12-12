@@ -27,7 +27,12 @@ export const View = (props: IProps) => {
         case ELoadStatus.IDLE: {
             if (exists) {
                 if (data) {
-                    content = <NodeHOC id={'root'} />;
+                    content =
+                        <NodeHOC
+                            id={'root'}
+                            index={0}
+                            level={0}
+                        />;
                 } else {
                     content = 'Select a document';
                 }

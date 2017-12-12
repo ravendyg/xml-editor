@@ -23,6 +23,39 @@ const docs: {[key: string]: TCompleteDocument} = {
             'root': {
                 name: 'document',
                 attrs: [],
+                children: ['q', 'w'],
+            },
+            'q': {
+                name: 'div',
+                attrs: [{
+                        name: 'color', value: 'green',
+                    }, {
+                        name: 'checked'
+                }],
+                children: ['a', 's'],
+            },
+            'w': {
+                name: 'div',
+                attrs: [],
+                children: ['d'],
+            },
+            'a': {
+                name: 'span',
+                attrs: [{
+                        name: 'id', value: 'some-id',
+                    }, {
+                        name: 'class', value: 'some-class'
+                }],
+                children: [],
+            },
+            's': {
+                name: 'span',
+                attrs: [],
+                children: [],
+            },
+            'd': {
+                name: 'span',
+                attrs: [],
                 children: [],
             },
         },
@@ -46,7 +79,7 @@ export const documentService: IDocumentService = {
         return new Promise((resolve) => {
             setTimeout(() => {
                 resolve(docList);
-            }, 1000);
+            }, 1);
         });
     },
 
@@ -54,7 +87,7 @@ export const documentService: IDocumentService = {
         return new Promise((resolve) => {
             setTimeout(() => {
                 resolve(docs[docId]);
-            }, 1000);
+            }, 1);
         });
     },
 };
