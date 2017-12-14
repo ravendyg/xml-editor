@@ -1,14 +1,17 @@
 import * as React from 'react';
 
+import { Attribute } from 'client/components/Attribute';
 import { TAG_OFFSET } from 'client/consts';
 import { TNode } from 'client/types/dataTypes';
 
 /**
+ * @prop {string} id Node identifier
  * @prop {number} index Element index among children
  * @prop {number} level How deep it is situated in the tree
  * @prop {TNode} node
  */
-export interface ITagStartProps {
+interface IProps {
+    id: string;
     index: number;
     level: number;
     node: TNode;
@@ -16,25 +19,23 @@ export interface ITagStartProps {
 
 // TODO: Check that a Node that has not been changed doesn't rerender due to `connect`
 // otherwise replace with PureComponent
-export const TagStart = ({ node: { attrs, name }, index, level }: ITagStartProps) => {
+export const TagStart = ({ node: { attrs, name }, index, level }: IProps) => {
     // does not display 'document' as a separate entity
     if (name === 'document') {
         return null;
     }
 
     // TODO: Replace spans with clickable components
-    const tagBody =
+    let tagBody =
         attrs.map(
-            ({name, value}, attrIndex) => {
-                let attr = [<span key={`${index}.${attrIndex}.0`} className="attr-start">{name}</span>];
-                if (value) {
-                    attr.push(<span key={`${index}.${attrIndex}.1`}>{'='}</span>);
-                    attr.push(<span key={`${index}.${attrIndex}.2`}>{`"${value}"`}</span>);
-                }
-                return attr;
-            }
+            ({name, value}, attrIndex) => (
+                <Attribute
+                    key={`${index}.${attrIndex}`}
+                    name={name}
+                    value={value}
+                />
+            )
         )
-        .reduce((acc, element) => acc.concat(element), [])
         ;
     const offset = (level * TAG_OFFSET);
     const tagStyle = offset
