@@ -1,8 +1,9 @@
 import * as React from 'react';
 
-import { Attribute } from 'client/components/Attribute';
 import { TAG_OFFSET } from 'client/consts';
 import { TNode } from 'client/types/dataTypes';
+
+declare type EMaybeInput = HTMLInputElement | null;
 
 /**
  * @prop {string} id Node identifier
@@ -12,42 +13,115 @@ import { TNode } from 'client/types/dataTypes';
  */
 interface IProps {
     id: string;
-    index: number;
     level: number;
     node: TNode;
 }
 
-// TODO: Check that a Node that has not been changed doesn't rerender due to `connect`
-// otherwise replace with PureComponent
-export const TagStart = ({ node: { attrs, name }, index, level }: IProps) => {
-    // does not display 'document' as a separate entity
-    if (name === 'document') {
-        return null;
+/**
+ * Attribute state
+ *
+ * @prop {boolean} beingEdited Is attribute being edited right now
+ */
+interface IState {
+    beingEdited: boolean;
+}
+
+export class TagStart extends React.PureComponent<IProps, IState> {
+    private input: EMaybeInput;
+
+    constructor(props: IProps) {
+        super(props);
+        this.state = {
+            beingEdited: false,
+        };
     }
 
-    // TODO: Replace spans with clickable components
-    let tagBody =
-        attrs.map(
-            ({name, value}, attrIndex) => (
-                <Attribute
-                    key={`${index}.${attrIndex}`}
-                    name={name}
-                    value={value}
-                />
-            )
-        )
-        ;
-    const offset = (level * TAG_OFFSET);
-    const tagStyle = offset
-        ? { marginLeft: offset + 'px' }
-        : {}
-        ;
-    tagBody.push(<span key={`${index}.${attrs.length}.0`}>{'>'}</span>);
+    /**
+     * Tag edit input lost focus
+     *
+     * @param {React.SyntheticEvent<HTMLInputElement>} event
+     */
+    handleBlur = (event: React.SyntheticEvent<HTMLInputElement>) => {
+        const text = (event.target as HTMLInputElement).value;
+        console.log(text);
+        // this.toggleBeingEdited();
+    }
 
-    return(
-        <div>
-            <span className="tag-start" style={tagStyle}>{`<${name}`}</span>
-            {tagBody}
-        </div>
-    );
-};
+    toggleBeingEdited = () => {
+        this.setState((prevState: IState) => ({
+            beingEdited: !prevState.beingEdited,
+        }));
+    }
+
+    /**
+     * Update reference
+     */
+    setInput = (ref: EMaybeInput) => this.input = ref;
+
+    focusOnInput = () => {
+        if (this.input) {
+            this.input.focus();
+        }
+    }
+
+    render() {
+        const { node: { attrs, children, name }, level } = this.props;
+        const { beingEdited } = this.state;
+
+        // does not display 'document' as a separate entity
+        if (name === 'document') {
+            return null;
+        }
+
+        let text = '';
+        attrs.forEach(
+            ({name, value}) => {
+                text += value
+                    ? ` ${name}="${value}"`
+                    : ` ${name} `
+                    ;
+            }
+        );
+
+        const offset = (level * TAG_OFFSET);
+        const tagStyle = offset
+            ? { marginLeft: offset + 'px' }
+            : {}
+            ;
+
+        let element;
+        if (beingEdited) {
+            setImmediate(this.focusOnInput);
+            text = name + text;
+            // matching input and it's content width would require to much of an effort
+            element = (
+                <input
+                    defaultValue={text}
+                    onBlur={this.handleBlur}
+                    ref={this.setInput}
+                    style={tagStyle}
+                />
+            );
+        } else {
+            const suffix =
+                (attrs.length ? ' ' : '')
+                + (children.length ? '>' : '/>')
+                ;
+            text = `<${name}${text}${suffix}`;
+            element = (
+                <span
+                    onDoubleClick={this.toggleBeingEdited}
+                    style={tagStyle}
+                >
+                    {text}
+                </span>
+            );
+        }
+
+        return(
+            <div className="tag-start">
+                {element}
+            </div>
+        );
+    }
+}

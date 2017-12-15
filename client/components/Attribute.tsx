@@ -16,11 +16,11 @@ interface IProps {
  *
  * @prop {boolean} beingEdited Is attribute being edited right now
  */
-interface IAttributeState {
+interface IState {
     beingEdited: boolean;
 }
 
-export class Attribute extends React.PureComponent<IProps, IAttributeState> {
+export class Attribute extends React.PureComponent<IProps, IState> {
     constructor(props: IProps) {
         super(props);
         this.state = {
