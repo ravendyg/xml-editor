@@ -1,5 +1,4 @@
 const
-    webpack = require('webpack'),
     path = require('path'),
     old = process.argv.find(el => el === '--env.old') ? '-old' : '',
     targets = {
@@ -36,7 +35,7 @@ module.exports = {
 
     output: {
         path: path.resolve(__dirname, 'public'),
-        filename: `app.js`,
+        filename: 'app.js',
     },
 
     module: {
@@ -118,14 +117,8 @@ module.exports = {
         publicPath: true,
     },
 
-    plugins: [
-        new webpack.DefinePlugin({
-            'process.env': {
-                'BROWSER': true,
-            },
-        }),
-    ],
+    plugins: [],
 
     externals: {},
 
-}
+};

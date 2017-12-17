@@ -12,12 +12,10 @@ import { TagStart } from '../components/TagStart';
 /**
  * @prop {number} id
  * @prop {number} level How deep it is situated in the tree
- * @prop {number} index Position in the list of siblings
  */
 interface IOwnProps {
     id: string;
     level: number;
-    index: number;
 }
 
 /**
@@ -28,7 +26,7 @@ interface IProps extends IOwnProps {
 }
 
 export const Node = (props: IProps): JSX.Element => {
-    const { id, index, level, node } = props;
+    const { id, level, node } = props;
     const { children } = node;
 
     // TODO: If node has no children use /> for closing
@@ -36,7 +34,6 @@ export const Node = (props: IProps): JSX.Element => {
         <div>
             <TagStart
                 id={id}
-                index={index}
                 level={level}
                 node={node}
             />
@@ -44,7 +41,6 @@ export const Node = (props: IProps): JSX.Element => {
                 <NodeHOC
                     key={index}
                     id={id}
-                    index={index}
                     level={level + 1}
                 />
             )}

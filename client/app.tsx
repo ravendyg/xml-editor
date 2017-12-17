@@ -8,11 +8,7 @@ import { ViewHOC } from 'client/containers/ViewHOC';
 import { documentService } from 'client/services/DocumentService';
 import { store } from 'client/store';
 
-try {
-    if (process.env.BROWSER) {
-        require('./styles.scss');
-    }
-} catch (e) {/**/}
+require('./styles.scss');
 
 const actions = createActions(store, documentService);
 

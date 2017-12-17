@@ -17,6 +17,7 @@ export const parseEditInput = (input: string): {name: string, attrs: TAttribute[
     let attrs: TAttribute[] = [];
     let start = 0;
 
+    // TODO: refactor it's to complex now
     for (let i = 0; i < input.length; i++) {
         const letter = input[i];
         switch (letter) {
@@ -77,6 +78,39 @@ export const parseEditInput = (input: string): {name: string, attrs: TAttribute[
                         break;
                     }
                 }
+                break;
+            }
+            default: {
+                switch (mode) {
+                    case EMode.OUT: {
+                        start = i;
+                        mode = EMode.INNAME;
+                        break;
+                    }
+                    case EMode.INNAME: {
+                        break;
+                    }
+                    case EMode.INVAL: {
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
+    switch (mode) {
+        case EMode.OUT: {
+            // spaces?
+            break;
+        }
+        case EMode.INNAME: {
+            const term = input.slice(start);
+            if (!name) {
+                name = term;
+            } else {
+                attrs.push({
+                    name: term,
+                });
             }
         }
     }

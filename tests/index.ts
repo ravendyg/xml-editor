@@ -1,1 +1,1 @@
-import {} from './utils';
+require('./utils');

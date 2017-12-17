@@ -30,7 +30,6 @@ export const View = (props: IProps) => {
                     content =
                         <NodeHOC
                             id={'root'}
-                            index={0}
                             level={0}
                         />;
                 } else {

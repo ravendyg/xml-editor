@@ -7,7 +7,6 @@ declare type EMaybeInput = HTMLInputElement | null;
 
 /**
  * @prop {string} id Node identifier
- * @prop {number} index Element index among children
  * @prop {number} level How deep it is situated in the tree
  * @prop {TNode} node
  */

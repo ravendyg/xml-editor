@@ -1,1 +1,1 @@
-import {} from './parseEditResponse';
+require('./parseEditResponse');
