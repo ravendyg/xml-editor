@@ -7,7 +7,8 @@ enum EMode {
 }
 
 /**
- * Parse whatever was entered as a tag name and attributes
+ * Parse whatever was entered as a tag name and attributes.
+ * To save time didn't look XML spec, just used limited subset of allowed symbols.
  *
  * @param {string} input
  */
