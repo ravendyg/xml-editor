@@ -85,15 +85,26 @@ describe('parse tag info', () => {
         });
     });
 
+    it('handles case with a space and a colon in an attr value', () => {
+        const res = parseEditInput('content style="color: red;"');
+        assert.deepEqual(res, {
+            attrs: [{
+                attrName: 'style',
+                value: 'color: red;',
+            }],
+            tagName: 'content',
+        });
+    });
+
     it('ignores unsupported symbols', () => {
-        const res = parseEditInput('content@ class="$qwe^" approved="@RLY"');
+        const res = parseEditInput('content class="$qwe^" approved="@RLY"');
         assert.deepEqual(res, {
             attrs: [{
                 attrName: 'class',
                 value: 'qwe',
             }, {
                 attrName: 'approved',
-                value: 'RLY',
+                value: '@RLY',
             }],
             tagName: 'content',
         });

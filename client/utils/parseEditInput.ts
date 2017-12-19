@@ -1,6 +1,7 @@
 import { TAttribute } from 'client/types/dataTypes';
+import { escape } from 'querystring';
 
-const notAllowedSymbols = /[^="a-zA-Z0-9_-\s]/g;
+const notAllowedSymbols = /[^=":;#@a-zA-Z0-9_-\s]/g;
 const allowedInNameSymbols = /[a-zA-Z-_]/;
 
 /**
@@ -34,13 +35,14 @@ const splitByNotescapedSpaces = (input: string) => {
     for (let i = 0; i < trimed.length; i++) {
         if (trimed[i] === '"') {
             escaped = !escaped;
-        } else if (trimed[i] === ' ') {
+        } else if (!escaped && trimed[i] === ' ') {
             return {
                 attr: trimed.slice(0, i),
                 rest: trimed.slice(i),
             };
         }
     }
+
     return {
         attr: trimed,
         rest: '',
