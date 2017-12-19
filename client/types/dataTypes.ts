@@ -18,7 +18,7 @@ export declare type TDocumentInfo = {
  * @prop {string} [value]
  */
 export declare type TAttribute = {
-    name: string;
+    attrName: string;
     value?: string;
 };
 
@@ -30,9 +30,18 @@ export declare type TAttribute = {
  * @prop {string[]} children Children ids
  */
 export declare type TNode = {
-    name: string;
+    tagName: string;
     attrs: TAttribute[];
     children: string[];
+};
+
+/**
+ * Transport container for node update info (children not included)
+ */
+export declare type TNodeInfo = {
+    key: string;
+    tagName: string;
+    attrs: TAttribute[];
 };
 
 /**

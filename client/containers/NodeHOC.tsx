@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 
+import { IActions } from 'client/actions';
 import {
     TCompleteDocument,
     TNode,
@@ -10,10 +11,12 @@ import { TagEnd } from '../components/TagEnd';
 import { TagStart } from '../components/TagStart';
 
 /**
+ * @prop {IActions} actions All actions connected to redux
  * @prop {number} id
  * @prop {number} level How deep it is situated in the tree
  */
 interface IOwnProps {
+    actions: IActions;
     id: string;
     level: number;
 }
@@ -26,13 +29,14 @@ interface IProps extends IOwnProps {
 }
 
 export const Node = (props: IProps): JSX.Element => {
-    const { id, level, node } = props;
+    const { actions, id, level, node } = props;
     const { children } = node;
 
     // TODO: If node has no children use /> for closing
     return(
         <div>
             <TagStart
+                actions={actions}
                 id={id}
                 level={level}
                 node={node}
@@ -40,6 +44,7 @@ export const Node = (props: IProps): JSX.Element => {
             {children.map((id, index) =>
                 <NodeHOC
                     key={index}
+                    actions={actions}
                     id={id}
                     level={level + 1}
                 />

@@ -21,40 +21,40 @@ const docs: {[key: string]: TCompleteDocument} = {
         name: 'document 1',
         model: {
             'root': {
-                name: 'document',
+                tagName: 'document',
                 attrs: [],
                 children: ['q', 'w'],
             },
             'q': {
-                name: 'div',
+                tagName: 'div',
                 attrs: [{
-                        name: 'color', value: 'green',
+                        attrName: 'color', value: 'green',
                     }, {
-                        name: 'checked'
+                        attrName: 'checked'
                 }],
                 children: ['a', 's'],
             },
             'w': {
-                name: 'div',
+                tagName: 'div',
                 attrs: [],
                 children: ['d'],
             },
             'a': {
-                name: 'span',
+                tagName: 'span',
                 attrs: [{
-                        name: 'id', value: 'some-id',
+                        attrName: 'id', value: 'some-id',
                     }, {
-                        name: 'class', value: 'some-class'
+                        attrName: 'class', value: 'some-class'
                 }],
                 children: [],
             },
             's': {
-                name: 'span',
+                tagName: 'span',
                 attrs: [],
                 children: [],
             },
             'd': {
-                name: 'span',
+                tagName: 'span',
                 attrs: [],
                 children: [],
             },
@@ -65,7 +65,7 @@ const docs: {[key: string]: TCompleteDocument} = {
         name: 'document 2',
         model: {
             'root': {
-                name: 'document',
+                tagName: 'document',
                 attrs: [],
                 children: [],
             },

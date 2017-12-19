@@ -3,11 +3,11 @@ import { parseEditInput } from 'client/utils/parseEditInput';
 
 describe('parse tag info', () => {
 
-    it('parses only tag name', () => {
+    it('parses only tag attrName', () => {
         const res = parseEditInput('div');
         assert.deepEqual(res, {
             attrs: [],
-            name: 'div',
+            tagName: 'div',
         });
     });
 
@@ -15,9 +15,9 @@ describe('parse tag info', () => {
         const res = parseEditInput('div checked');
         assert.deepEqual(res, {
             attrs: [{
-                name: 'checked',
+                attrName: 'checked',
             }],
-            name: 'div',
+            tagName: 'div',
         });
     });
 
@@ -25,11 +25,11 @@ describe('parse tag info', () => {
         const res = parseEditInput('content checked approved');
         assert.deepEqual(res, {
             attrs: [{
-                name: 'checked',
+                attrName: 'checked',
             }, {
-                name: 'approved',
+                attrName: 'approved',
             }],
-            name: 'content',
+            tagName: 'content',
         });
     });
 
@@ -37,10 +37,10 @@ describe('parse tag info', () => {
         const res = parseEditInput('div class="qwe"');
         assert.deepEqual(res, {
             attrs: [{
-                name: 'class',
+                attrName: 'class',
                 value: 'qwe',
             }],
-            name: 'div',
+            tagName: 'div',
         });
     });
 
@@ -48,13 +48,13 @@ describe('parse tag info', () => {
         const res = parseEditInput('div class="qwe" id="some-id"');
         assert.deepEqual(res, {
             attrs: [{
-                name: 'class',
+                attrName: 'class',
                 value: 'qwe',
             }, {
-                name: 'id',
+                attrName: 'id',
                 value: 'some-id',
             }],
-            name: 'div',
+            tagName: 'div',
         });
     });
 
@@ -62,14 +62,14 @@ describe('parse tag info', () => {
         const res = parseEditInput('section checked class="some_class" approved');
         assert.deepEqual(res, {
             attrs: [{
-                name: 'checked',
+                attrName: 'checked',
             }, {
-                name: 'class',
+                attrName: 'class',
                 value: 'some_class',
             }, {
-                name: 'approved',
+                attrName: 'approved',
             }],
-            name: 'section',
+            tagName: 'section',
         });
     });
 
@@ -77,11 +77,11 @@ describe('parse tag info', () => {
         const res = parseEditInput('\t content checked approved    ');
         assert.deepEqual(res, {
             attrs: [{
-                name: 'checked',
+                attrName: 'checked',
             }, {
-                name: 'approved',
+                attrName: 'approved',
             }],
-            name: 'content',
+            tagName: 'content',
         });
     });
 
@@ -89,13 +89,13 @@ describe('parse tag info', () => {
         const res = parseEditInput('content@ class="$qwe^" approved="@RLY"');
         assert.deepEqual(res, {
             attrs: [{
-                name: 'class',
+                attrName: 'class',
                 value: 'qwe',
             }, {
-                name: 'approved',
+                attrName: 'approved',
                 value: 'RLY',
             }],
-            name: 'content',
+            tagName: 'content',
         });
     });
 

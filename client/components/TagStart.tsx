@@ -1,7 +1,10 @@
 import * as React from 'react';
 
+import { IActions } from 'client/actions';
 import { TAG_OFFSET } from 'client/consts';
-import { TNode } from 'client/types/dataTypes';
+import { KEY_CODES } from 'client/consts';
+import { TNode, TNodeInfo } from 'client/types/dataTypes';
+import { parseEditInput } from 'client/utils/parseEditInput';
 
 declare type EMaybeInput = HTMLInputElement | null;
 
@@ -14,6 +17,7 @@ interface IProps {
     id: string;
     level: number;
     node: TNode;
+    actions: IActions;
 }
 
 /**
@@ -42,8 +46,24 @@ export class TagStart extends React.PureComponent<IProps, IState> {
      */
     handleBlur = (event: React.SyntheticEvent<HTMLInputElement>) => {
         const text = (event.target as HTMLInputElement).value;
-        console.log(text);
-        // this.toggleBeingEdited();
+        const { actions, id } = this.props;
+        const nodeInfo: TNodeInfo = {
+            key: id,
+            ...parseEditInput(text),
+        };
+        actions.updateNode(nodeInfo);
+        this.toggleBeingEdited();
+    }
+
+    /**
+     * Tag edit input submit
+     *
+     * @param {React.KeyboardEvent<HTMLInputElement>} event
+     */
+    handleKeyUp = (event: React.KeyboardEvent<HTMLInputElement>) => {
+        if (event.keyCode === KEY_CODES.Enter) {
+            (event.target as HTMLInputElement).blur();
+        }
     }
 
     toggleBeingEdited = () => {
@@ -64,20 +84,20 @@ export class TagStart extends React.PureComponent<IProps, IState> {
     }
 
     render() {
-        const { node: { attrs, children, name }, level } = this.props;
+        const { node: { attrs, children, tagName }, level } = this.props;
         const { beingEdited } = this.state;
 
         // does not display 'document' as a separate entity
-        if (name === 'document') {
+        if (tagName === 'document') {
             return null;
         }
 
         let text = '';
         attrs.forEach(
-            ({name, value}) => {
+            ({attrName, value}) => {
                 text += value
-                    ? ` ${name}="${value}"`
-                    : ` ${name} `
+                    ? ` ${attrName}="${value}"`
+                    : ` ${attrName} `
                     ;
             }
         );
@@ -91,12 +111,13 @@ export class TagStart extends React.PureComponent<IProps, IState> {
         let element;
         if (beingEdited) {
             setImmediate(this.focusOnInput);
-            text = name + text;
+            text = tagName + text;
             // matching input and it's content width would require to much of an effort
             element = (
                 <input
                     defaultValue={text}
                     onBlur={this.handleBlur}
+                    onKeyUp={this.handleKeyUp}
                     ref={this.setInput}
                     style={tagStyle}
                 />
@@ -106,7 +127,7 @@ export class TagStart extends React.PureComponent<IProps, IState> {
                 (attrs.length ? ' ' : '')
                 + (children.length ? '>' : '/>')
                 ;
-            text = `<${name}${text}${suffix}`;
+            text = `<${tagName}${text}${suffix}`;
             element = (
                 <span
                     onDoubleClick={this.toggleBeingEdited}

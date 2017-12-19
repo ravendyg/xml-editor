@@ -18,7 +18,7 @@ const getTagName = (input: string) => {
         throw new Error('Missing tag name');
     }
     return {
-        name: trimed.slice(0, i),
+        tagName: trimed.slice(0, i),
         rest: trimed.slice(i),
     };
 };
@@ -53,8 +53,8 @@ const splitByNotescapedSpaces = (input: string) => {
  * @param {string} input
  */
 const parseAttribute = (input: string): TAttribute => {
-    const [name, value] = input.split('=');
-    let res: TAttribute = { name };
+    const [attrName, value] = input.split('=');
+    let res: TAttribute = { attrName };
     if (value) {
         res.value = value.replace(/"/g, '');
     }
@@ -67,11 +67,11 @@ const parseAttribute = (input: string): TAttribute => {
  *
  * @param {string} input
  */
-export const parseEditInput = (input: string): {name: string, attrs: TAttribute[]} => {
+export const parseEditInput = (input: string) => {
     let attrs: TAttribute[] = [];
 
     const sanitized = input.replace(notAllowedSymbols, '').replace(/\s/g, ' ');
-    let { name, rest } = getTagName(sanitized);
+    let { tagName, rest } = getTagName(sanitized);
 
     while (rest) {
         const attrAndTheRest = splitByNotescapedSpaces(rest);
@@ -81,6 +81,6 @@ export const parseEditInput = (input: string): {name: string, attrs: TAttribute[
 
     return {
         attrs,
-        name,
+        tagName,
     };
 };

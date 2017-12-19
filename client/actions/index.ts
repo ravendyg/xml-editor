@@ -1,9 +1,9 @@
 import {
     ECashDocuments,
+    EDocumentAction,
     EDocumentListAction,
-    ELoadDocumentAction,
 } from 'client/types/actions';
-import { TCompleteDocument } from 'client/types/dataTypes';
+import { TCompleteDocument, TNodeInfo } from 'client/types/dataTypes';
 import { ELoadStatus } from 'client/types/enums';
 import { IDocumentService } from 'client/types/services';
 import { IStore } from 'client/types/state';
@@ -11,26 +11,37 @@ import { IStore } from 'client/types/state';
 export interface IActions {
     loadDocumentList: () => Promise<void>;
     selectDocument: (docId: string) => Promise<void>;
+    updateNode: (nodeInfo: TNodeInfo) => void;
 }
 
 export const createActions = (store: IStore, documentService: IDocumentService): IActions => {
     const selectDocument = (docId: string) => {
+        // cash currently selected doc, if any
+        const { data, status } = store.getState().activeDocument;
+        if (status === ELoadStatus.IDLE && data) {
+            store.dispatch({
+                type: ECashDocuments.ADD_DOCUMENT,
+                payload: data,
+            });
+        }
+
+        // load the selected one
         const cashedDoc: TCompleteDocument = store.getState().cashDocument[docId];
         if (cashedDoc) {
             store.dispatch({
-                type: ELoadDocumentAction.LOAD_SUCCESS,
+                type: EDocumentAction.LOAD_SUCCESS,
                 payload: cashedDoc,
             });
             return Promise.resolve();
         } else {
             store.dispatch({
-                type: ELoadDocumentAction.LOAD_START,
+                type: EDocumentAction.LOAD_START,
                 payload: null,
             });
             return documentService.getTCompleteDocument(docId)
             .then(doc => {
                 store.dispatch({
-                    type: ELoadDocumentAction.LOAD_SUCCESS,
+                    type: EDocumentAction.LOAD_SUCCESS,
                     payload: doc,
                 });
                 store.dispatch({
@@ -40,7 +51,7 @@ export const createActions = (store: IStore, documentService: IDocumentService):
             })
             .catch(error => {
                 store.dispatch({
-                    type: ELoadDocumentAction.LOAD_ERROR,
+                    type: EDocumentAction.LOAD_ERROR,
                     payload: error,
                 });
             });
@@ -62,7 +73,7 @@ export const createActions = (store: IStore, documentService: IDocumentService):
             const doc = store.getState().activeDocument;
             if (doc.data === null && doc.status === ELoadStatus.RUNNING) {
                 store.dispatch({
-                    type: ELoadDocumentAction.LOAD_SUCCESS,
+                    type: EDocumentAction.LOAD_SUCCESS,
                     payload: null,
                 });
             }
@@ -75,8 +86,19 @@ export const createActions = (store: IStore, documentService: IDocumentService):
         });
     };
 
+    const updateNode = (payload: TNodeInfo) => {
+        const { key } = payload;
+        if (key !== 'root') {
+            store.dispatch({
+                type: EDocumentAction.UPDATE_NODE,
+                payload,
+            });
+        }
+    };
+
     return {
         loadDocumentList,
         selectDocument,
+        updateNode,
     };
 };

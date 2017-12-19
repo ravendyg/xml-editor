@@ -12,9 +12,9 @@ interface IProps {
     node: TNode;
 }
 
-export const TagEnd = ({ node: { name }, level }: IProps) => {
+export const TagEnd = ({ node: { tagName }, level }: IProps) => {
     // does not display 'document' as a separate entity
-    if (name === 'document') {
+    if (tagName === 'document') {
         return null;
     }
 
@@ -26,7 +26,7 @@ export const TagEnd = ({ node: { name }, level }: IProps) => {
 
     return(
         <div>
-            <span className="tag-end" style={tagStyle}>{`</${name}>`}</span>
+            <span className="tag-end" style={tagStyle}>{`</${tagName}>`}</span>
         </div>
     );
 };

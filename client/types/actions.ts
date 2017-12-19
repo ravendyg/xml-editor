@@ -4,7 +4,7 @@ import {
     TCompleteDocument,
     TDocumentInfo,
 } from 'client/types/dataTypes';
-import { IError } from 'client/types/dataTypes';
+import { IError, TNodeInfo } from 'client/types/dataTypes';
 
 export interface IAction<T, P> extends AnyAction {
     type: T;
@@ -23,16 +23,18 @@ export declare type TDocumentListAction =
     | IAction<EDocumentListAction.LOAD_ERROR, IError>
     ;
 
-export const enum ELoadDocumentAction {
+export const enum EDocumentAction {
     LOAD_START = 'DOCUMENT_LOAD_START',
     LOAD_SUCCESS = 'DOCUMENT_LOAD_SUCCESS',
     LOAD_ERROR = 'DOCUMENT_LOAD_ERROR',
+    UPDATE_NODE = 'UPDATE_NODE',
 }
 
-export declare type LoadDocumentAction =
-    IAction<ELoadDocumentAction.LOAD_START, null>
-    | IAction<ELoadDocumentAction.LOAD_SUCCESS, TCompleteDocument>
-    | IAction<ELoadDocumentAction.LOAD_ERROR, IError>
+export declare type DocumentAction =
+    IAction<EDocumentAction.LOAD_START, null>
+    | IAction<EDocumentAction.LOAD_SUCCESS, TCompleteDocument>
+    | IAction<EDocumentAction.LOAD_ERROR, IError>
+    | IAction<EDocumentAction.UPDATE_NODE, TNodeInfo>
     ;
 
 export const enum ECashDocuments {

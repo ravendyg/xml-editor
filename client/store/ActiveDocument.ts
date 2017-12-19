@@ -1,18 +1,18 @@
 import {
-    ELoadDocumentAction,
-    LoadDocumentAction,
+    DocumentAction,
+    EDocumentAction,
 } from 'client/types/actions';
 import { ELoadStatus } from 'client/types/enums';
 import { IActiveDocument } from 'client/types/state';
 
 export const activeDocument = (
     state: IActiveDocument = getDefaultDocumentList(),
-    action: LoadDocumentAction,
+    action: DocumentAction,
 ): IActiveDocument => {
-    let newState: IActiveDocument;
+    let newState: IActiveDocument = state;
 
     switch (action.type) {
-        case ELoadDocumentAction.LOAD_START: {
+        case EDocumentAction.LOAD_START: {
             newState = {
                 data: null,
                 error: null,
@@ -20,7 +20,7 @@ export const activeDocument = (
             };
             break;
         }
-        case ELoadDocumentAction.LOAD_ERROR: {
+        case EDocumentAction.LOAD_ERROR: {
             newState = {
                 data: null,
                 error: action.payload,
@@ -28,7 +28,7 @@ export const activeDocument = (
             };
             break;
         }
-        case ELoadDocumentAction.LOAD_SUCCESS: {
+        case EDocumentAction.LOAD_SUCCESS: {
             newState = {
                 data: action.payload,
                 error: null,
@@ -36,8 +36,29 @@ export const activeDocument = (
             };
             break;
         }
-        default: {
-            return state;
+        case EDocumentAction.UPDATE_NODE: {
+            const { key, attrs, tagName } = action.payload;
+            if (state.data && state.data.model[key]) {
+                const { children } = state.data.model[key];
+                const { id, model, name } = state.data;
+                newState = {
+                    data: {
+                        id,
+                        model: {
+                            ...model,
+                            [key]: {
+                                attrs,
+                                children,
+                                tagName,
+                            },
+                        },
+                        name,
+                    },
+                    error: null,
+                    status: ELoadStatus.IDLE,
+                };
+            }
+            break;
         }
     }
 
