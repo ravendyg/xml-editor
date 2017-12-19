@@ -11,6 +11,28 @@ describe('parse tag info', () => {
         });
     });
 
+    it('parses tag name and one attribute without value', () => {
+        const res = parseEditInput('div checked');
+        assert.deepEqual(res, {
+            attrs: [{
+                name: 'checked',
+            }],
+            name: 'div',
+        });
+    });
+
+    it('parses tag name and multiple attribute without value', () => {
+        const res = parseEditInput('content checked approved');
+        assert.deepEqual(res, {
+            attrs: [{
+                name: 'checked',
+            }, {
+                name: 'approved',
+            }],
+            name: 'content',
+        });
+    });
+
     it('parses tag name and one attribute with value', () => {
         const res = parseEditInput('div class="qwe"');
         assert.deepEqual(res, {
@@ -33,28 +55,6 @@ describe('parse tag info', () => {
                 value: 'some-id',
             }],
             name: 'div',
-        });
-    });
-
-    it('parses tag name and one attribute without value', () => {
-        const res = parseEditInput('div checked');
-        assert.deepEqual(res, {
-            attrs: [{
-                name: 'checked',
-            }],
-            name: 'div',
-        });
-    });
-
-    it('parses tag name and multiple attribute without value', () => {
-        const res = parseEditInput('content checked approved');
-        assert.deepEqual(res, {
-            attrs: [{
-                name: 'checked',
-            }, {
-                name: 'approved',
-            }],
-            name: 'content',
         });
     });
 
@@ -97,6 +97,15 @@ describe('parse tag info', () => {
             }],
             name: 'content',
         });
+    });
+
+    it('throws if there is no tag name', () => {
+        try {
+            parseEditInput('content="checked approved    "');
+            throw new Error('Should not be here');
+        } catch (e) {
+            assert.equal(e.message, 'Missing tag name');
+        }
     });
 
 });

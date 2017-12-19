@@ -1,10 +1,65 @@
 import { TAttribute } from 'client/types/dataTypes';
 
-enum EMode {
-    OUT = 'OUT',
-    INNAME = 'INNAME',
-    INVAL = 'INVAL',
-}
+const notAllowedSymbols = /[^="a-zA-Z0-9_-\s]/g;
+const allowedInNameSymbols = /[a-zA-Z-_]/;
+
+/**
+ * Get tag name
+ *
+ * @param {string} input Assumes all \s were replaced with plain spaces
+ */
+const getTagName = (input: string) => {
+    let i = 0;
+    const trimed = input.trim();
+    while (i < trimed.length && allowedInNameSymbols.test(trimed[i])) {
+        i++;
+    }
+    if (i < trimed.length && trimed[i] !== ' ') {
+        throw new Error('Missing tag name');
+    }
+    return {
+        name: trimed.slice(0, i),
+        rest: trimed.slice(i),
+    };
+};
+
+/**
+ * Split by not escaped spaces into meaningfull chunks
+ *
+ * @param {string} input
+ */
+const splitByNotescapedSpaces = (input: string) => {
+    const trimed = input.trim();
+    let escaped = false;
+    for (let i = 0; i < trimed.length; i++) {
+        if (trimed[i] === '"') {
+            escaped = !escaped;
+        } else if (trimed[i] === ' ') {
+            return {
+                attr: trimed.slice(0, i),
+                rest: trimed.slice(i),
+            };
+        }
+    }
+    return {
+        attr: trimed,
+        rest: '',
+    };
+};
+
+/**
+ * Parse attribute
+ *
+ * @param {string} input
+ */
+const parseAttribute = (input: string): TAttribute => {
+    const [name, value] = input.split('=');
+    let res: TAttribute = { name };
+    if (value) {
+        res.value = value.replace(/"/g, '');
+    }
+    return res;
+};
 
 /**
  * Parse whatever was entered as a tag name and attributes.
@@ -13,107 +68,15 @@ enum EMode {
  * @param {string} input
  */
 export const parseEditInput = (input: string): {name: string, attrs: TAttribute[]} => {
-    let mode: EMode = EMode.OUT;
-    let name = '';
     let attrs: TAttribute[] = [];
-    let start = 0;
 
-    // TODO: refactor it's to complex now
-    for (let i = 0; i < input.length; i++) {
-        const letter = input[i];
-        switch (letter) {
-            case ' ': {
-                switch (mode) {
-                    case EMode.OUT: {
-                        break;
-                    }
-                    case EMode.INNAME: {
-                        if (name) {
-                            let attr: TAttribute = {
-                                name: input.slice(start, i),
-                            };
-                            attrs.push(attr);
-                        } else {
-                            name = input.slice(start, i);
-                        }
-                        mode = EMode.OUT;
-                        break;
-                    }
-                    case EMode.INVAL: {
-                        break;
-                    }
-                }
-                break;
-            }
-            case '=': {
-                switch (mode) {
-                    case EMode.OUT: {
-                        throw new Error('Lose =');
-                    }
-                    case EMode.INNAME: {
-                        if (!name) {
-                            throw new Error('Missing tag name');
-                        } else {
-                            let attr: TAttribute = {
-                                name: input.slice(start, i),
-                            };
-                            attrs.push(attr);
-                        }
-                        mode = EMode.INVAL;
-                        break;
-                    }
-                    case EMode.INVAL: {
-                        // allow '=' in attribute values
-                        break;
-                    }
-                }
-                break;
-            }
-            case '"': {
-                switch (mode) {
-                    case EMode.OUT: {
-                        throw new Error('Lose "');
-                    }
-                    case EMode.INNAME: {
-                        start = i;
-                        break;
-                    }
-                }
-                break;
-            }
-            default: {
-                switch (mode) {
-                    case EMode.OUT: {
-                        start = i;
-                        mode = EMode.INNAME;
-                        break;
-                    }
-                    case EMode.INNAME: {
-                        break;
-                    }
-                    case EMode.INVAL: {
-                        break;
-                    }
-                }
-            }
-        }
-    }
+    const sanitized = input.replace(notAllowedSymbols, '').replace(/\s/g, ' ');
+    let { name, rest } = getTagName(sanitized);
 
-    switch (mode) {
-        case EMode.OUT: {
-            // spaces?
-            break;
-        }
-        case EMode.INNAME: {
-            const term = input.slice(start);
-            if (!name) {
-                name = term;
-            } else {
-                attrs.push({
-                    name: term,
-                });
-            }
-        }
+    while (rest) {
+        const attrAndTheRest = splitByNotescapedSpaces(rest);
+        attrs.push(parseAttribute(attrAndTheRest.attr));
+        rest = attrAndTheRest.rest;
     }
 
     return {
