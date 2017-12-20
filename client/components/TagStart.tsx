@@ -1,9 +1,15 @@
 import * as React from 'react';
 
 import { IActions } from 'client/actions';
-import { TAG_OFFSET } from 'client/consts';
+import {
+    TAG_OFFSET,
+    TAG_OFFSET_STEP,
+} from 'client/consts';
 import { KEY_CODES } from 'client/consts';
-import { TNode, TNodeInfo } from 'client/types/dataTypes';
+import {
+    TNode,
+    TNodeInfo,
+} from 'client/types/dataTypes';
 import { parseEditInput } from 'client/utils/parseEditInput';
 
 declare type EMaybeInput = HTMLInputElement | null;
@@ -102,7 +108,7 @@ export class TagStart extends React.PureComponent<IProps, IState> {
             }
         );
 
-        const offset = (level * TAG_OFFSET);
+        const offset = TAG_OFFSET + (level * TAG_OFFSET_STEP);
         const tagStyle = offset
             ? { marginLeft: offset + 'px' }
             : {}
@@ -116,6 +122,7 @@ export class TagStart extends React.PureComponent<IProps, IState> {
             element = (
                 <input
                     defaultValue={text}
+                    className={'tag-start--input'}
                     onBlur={this.handleBlur}
                     onKeyUp={this.handleKeyUp}
                     ref={this.setInput}
@@ -130,6 +137,7 @@ export class TagStart extends React.PureComponent<IProps, IState> {
             text = `<${tagName}${text}${suffix}`;
             element = (
                 <span
+                    className={'tag-start--tag'}
                     onDoubleClick={this.toggleBeingEdited}
                     style={tagStyle}
                 >
@@ -140,6 +148,10 @@ export class TagStart extends React.PureComponent<IProps, IState> {
 
         return(
             <div className="tag-start">
+                <span className="tag-start--btns">
+                    <button>+</button>
+                    <button>X</button>
+                </span>
                 {element}
             </div>
         );

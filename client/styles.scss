@@ -7,6 +7,12 @@
     }
 }
 
-.attr-start {
-    margin-left: 5px;
+.tag-start, .tag-end {
+    margin: 5px 0;
+}
+
+.tag-start--btns {
+    button {
+        margin: 0 5px;
+    }
 }

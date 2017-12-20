@@ -1,4 +1,8 @@
-export const TAG_OFFSET = 10;
+export const TAG_OFFSET = 5;
+
+export const TAG_OFFSET_STEP = 15;
+
+export const BTN_WIDTH = 70;
 
 export const KEY_CODES = {
     Enter: 13,

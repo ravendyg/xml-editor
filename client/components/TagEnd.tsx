@@ -1,6 +1,10 @@
 import * as React from 'react';
 
-import { TAG_OFFSET } from 'client/consts';
+import {
+    BTN_WIDTH,
+    TAG_OFFSET,
+    TAG_OFFSET_STEP,
+} from 'client/consts';
 import {TNode} from 'client/types/dataTypes';
 
 /**
@@ -17,8 +21,8 @@ export const TagEnd = ({ node: { tagName }, level }: IProps) => {
     if (tagName === 'document') {
         return null;
     }
-
-    const offset = (level * TAG_OFFSET);
+console.log(level)
+    const offset = BTN_WIDTH + TAG_OFFSET + (level * TAG_OFFSET_STEP);
     const tagStyle = offset
         ? { marginLeft: offset + 'px' }
         : {}

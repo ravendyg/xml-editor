@@ -1,5 +1,4 @@
 import { TAttribute } from 'client/types/dataTypes';
-import { escape } from 'querystring';
 
 const notAllowedSymbols = /[^=":;#@a-zA-Z0-9_-\s]/g;
 const allowedInNameSymbols = /[a-zA-Z-_]/;
