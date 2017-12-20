@@ -15,15 +15,16 @@ import { parseEditInput } from 'client/utils/parseEditInput';
 declare type EMaybeInput = HTMLInputElement | null;
 
 /**
+ * @prop {IActions} actions All actions
  * @prop {string} id Node identifier
  * @prop {number} level How deep it is situated in the tree
  * @prop {TNode} node
  */
 interface IProps {
+    actions: IActions;
     id: string;
     level: number;
     node: TNode;
-    actions: IActions;
 }
 
 /**
@@ -52,10 +53,11 @@ export class TagStart extends React.PureComponent<IProps, IState> {
      */
     handleBlur = (event: React.SyntheticEvent<HTMLInputElement>) => {
         const text = (event.target as HTMLInputElement).value;
-        const { actions, id } = this.props;
+        const { actions, id, node: { parent } } = this.props;
         const nodeInfo: TNodeInfo = {
             key: id,
             ...parseEditInput(text),
+            parent,
         };
         actions.updateNode(nodeInfo);
         this.toggleBeingEdited();
@@ -72,6 +74,24 @@ export class TagStart extends React.PureComponent<IProps, IState> {
         }
     }
 
+    /**
+     * Create children click handler
+     */
+    handleCreateClick = () => {
+        console.log('Add children to ' + this.props.id);
+    }
+
+    /**
+     * Remove node click handler
+     */
+    handleRemoveClick = () => {
+        const { id, actions: { removeNode } } = this.props;
+        removeNode(id);
+    }
+
+    /**
+     * Toggle editor
+     */
     toggleBeingEdited = () => {
         this.setState((prevState: IState) => ({
             beingEdited: !prevState.beingEdited,
@@ -83,6 +103,9 @@ export class TagStart extends React.PureComponent<IProps, IState> {
      */
     setInput = (ref: EMaybeInput) => this.input = ref;
 
+    /**
+     * Set focus on the input field (after it has been created)
+     */
     focusOnInput = () => {
         if (this.input) {
             this.input.focus();
@@ -90,7 +113,10 @@ export class TagStart extends React.PureComponent<IProps, IState> {
     }
 
     render() {
-        const { node: { attrs, children, tagName }, level } = this.props;
+        const {
+            node: { attrs, children, tagName },
+            level,
+        } = this.props;
         const { beingEdited } = this.state;
 
         // does not display 'document' as a separate entity
@@ -149,8 +175,14 @@ export class TagStart extends React.PureComponent<IProps, IState> {
         return(
             <div className="tag-start">
                 <span className="tag-start--btns">
-                    <button>+</button>
-                    <button>X</button>
+                    <button
+                        onClick={this.handleCreateClick}
+                        title="Add children"
+                    >+</button>
+                    <button
+                        onClick={this.handleRemoveClick}
+                        title="Remove node"
+                    >X</button>
                 </span>
                 {element}
             </div>

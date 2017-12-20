@@ -21,42 +21,48 @@ const docs: {[key: string]: TCompleteDocument} = {
         name: 'document 1',
         model: {
             'root': {
-                tagName: 'document',
                 attrs: [],
                 children: ['q', 'w'],
+                parent: '',
+                tagName: 'document',
             },
             'q': {
-                tagName: 'div',
                 attrs: [{
-                        attrName: 'color', value: 'green',
-                    }, {
-                        attrName: 'checked'
+                    attrName: 'color', value: 'green',
+                }, {
+                    attrName: 'checked'
                 }],
                 children: ['a', 's'],
+                parent: 'root',
+                tagName: 'div',
             },
             'w': {
-                tagName: 'div',
                 attrs: [],
                 children: ['d'],
+                parent: 'root',
+                tagName: 'div',
             },
             'a': {
-                tagName: 'span',
                 attrs: [{
-                        attrName: 'id', value: 'some-id',
-                    }, {
-                        attrName: 'class', value: 'some-class'
+                    attrName: 'id', value: 'some-id',
+                }, {
+                    attrName: 'class', value: 'some-class'
                 }],
                 children: [],
+                parent: 'q',
+                tagName: 'span',
             },
             's': {
-                tagName: 'span',
                 attrs: [],
                 children: [],
+                parent: 'q',
+                tagName: 'span',
             },
             'd': {
-                tagName: 'span',
                 attrs: [],
                 children: [],
+                parent: 'w',
+                tagName: 'span',
             },
         },
     },
@@ -65,9 +71,10 @@ const docs: {[key: string]: TCompleteDocument} = {
         name: 'document 2',
         model: {
             'root': {
-                tagName: 'document',
                 attrs: [],
                 children: [],
+                parent: '',
+                tagName: 'document',
             },
         },
     },

@@ -25,23 +25,30 @@ export declare type TAttribute = {
 /**
  * Node === tag
  *
- * @prop {string} name Like div, span, etc.
  * @prop {TAttribute[]} attrs
  * @prop {string[]} children Children ids
+ * @prop {string} parent Node parent
+ * @prop {string} tagName Like div, span, etc.
  */
 export declare type TNode = {
-    tagName: string;
     attrs: TAttribute[];
     children: string[];
+    parent: string;
+    tagName: string;
 };
 
 /**
  * Transport container for node update info (children not included)
+ *
+ * @prop {TAttribute[]} attrs
+ * @prop {string} parent Node parent
+ * @prop {string} tagName Like div, span, etc.
  */
 export declare type TNodeInfo = {
-    key: string;
-    tagName: string;
     attrs: TAttribute[];
+    key: string;
+    parent: string;
+    tagName: string;
 };
 
 /**

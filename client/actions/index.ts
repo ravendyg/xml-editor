@@ -11,6 +11,7 @@ import { IStore } from 'client/types/state';
 export interface IActions {
     loadDocumentList: () => Promise<void>;
     selectDocument: (docId: string) => Promise<void>;
+    removeNode: (nodeId: string) => void;
     updateNode: (nodeInfo: TNodeInfo) => void;
 }
 
@@ -86,6 +87,15 @@ export const createActions = (store: IStore, documentService: IDocumentService):
         });
     };
 
+    const removeNode = (nodeId: string) => {
+        if (nodeId !== 'root') {
+            store.dispatch({
+                type: EDocumentAction.REMOVE_NODE,
+                payload: nodeId,
+            });
+        }
+    };
+
     const updateNode = (payload: TNodeInfo) => {
         const { key } = payload;
         if (key !== 'root') {
@@ -99,6 +109,7 @@ export const createActions = (store: IStore, documentService: IDocumentService):
     return {
         loadDocumentList,
         selectDocument,
+        removeNode,
         updateNode,
     };
 };
