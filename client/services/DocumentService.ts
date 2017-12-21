@@ -58,8 +58,34 @@ const docs: {[key: string]: TCompleteDocument} = {
                 parent: 'q',
                 tagName: 'span',
             },
-            'd': {
-                attrs: [],
+            'd1': {
+                attrs: [{
+                    attrName: 'num1'
+                }],
+                children: [],
+                parent: 'w',
+                tagName: 'span',
+            },
+            'd2': {
+                attrs: [{
+                    attrName: 'num2'
+                }],
+                children: [],
+                parent: 'w',
+                tagName: 'span',
+            },
+            'd3': {
+                attrs: [{
+                    attrName: 'num3'
+                }],
+                children: [],
+                parent: 'w',
+                tagName: 'span',
+            },
+            'd4': {
+                attrs: [{
+                    attrName: 'num4'
+                }],
                 children: [],
                 parent: 'w',
                 tagName: 'span',

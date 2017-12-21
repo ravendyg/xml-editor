@@ -25,11 +25,15 @@ interface IOwnProps {
  * @prop {TNode} node
  */
 interface IProps extends IOwnProps {
-    node: TNode;
+    node: TNode | undefined;
 }
 
-export const Node = (props: IProps): JSX.Element => {
+export const Node = (props: IProps): JSX.Element | null => {
     const { actions, id, level, node } = props;
+    if (!node) {
+        return null;
+    }
+
     const { children } = node;
 
     // TODO: If node has no children use /> for closing
