@@ -32,17 +32,32 @@ interface INodeContextMenuProps {
 }
 
 export const NodeContextMenu = (props: INodeContextMenuProps) => {
-    const { menuInfo: { x, y } } = props;
+    const { actions, menuInfo: { id, x, y } } = props;
     const style = {
         transform: `translate(${x}px, ${y}px)`,
     };
+    const removeNode = () => {
+        actions.removeNode(id);
+        actions.hideAllModals();
+    };
+    const addChild = () => {
+        console.log('Add children to ' + id);
+        actions.hideAllModals();
+    };
+
     return(
         <ul
             className="node-context-menu"
             style={style}
         >
-            <li className="node-context-menu--item">Add a child</li>
-            <li className="node-context-menu--item">Remove</li>
+            <li
+                className="node-context-menu--item"
+                onClick={addChild}
+            >Add a child</li>
+            <li
+                className="node-context-menu--item"
+                onClick={removeNode}
+            >Remove</li>
         </ul>
     );
 };

@@ -76,21 +76,6 @@ export class TagStart extends React.PureComponent<IProps, IState> {
     }
 
     /**
-     * Create children click handler
-     */
-    handleCreateClick = () => {
-        console.log('Add children to ' + this.props.id);
-    }
-
-    /**
-     * Remove node click handler
-     */
-    handleRemoveClick = () => {
-        const { actions: { removeNode }, id } = this.props;
-        removeNode(id);
-    }
-
-    /**
      * Move this node
      *
      * @param {EMoveDirections} direction
@@ -209,16 +194,8 @@ export class TagStart extends React.PureComponent<IProps, IState> {
         }
 
         return(
-            <div className="tag-start" onContextMenu={this.handleContextMenu}>
+            <div className="tag-start" onContextMenu={this.handleContextMenu} title="Right click for more options">
                 <span className="tag-start--btns">
-                    <button
-                        onClick={this.handleCreateClick}
-                        title="Add children"
-                    >+</button>
-                    <button
-                        onClick={this.handleRemoveClick}
-                        title="Remove node"
-                    >X</button>
                     <button
                         onClick={this.handleMoveUp}
                         title="Move node up"
