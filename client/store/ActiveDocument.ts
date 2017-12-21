@@ -1,6 +1,6 @@
 import {
-    DocumentAction,
     EDocumentAction,
+    TDocumentAction,
 } from 'client/types/actions';
 import {
     ELoadStatus,
@@ -10,7 +10,7 @@ import { IActiveDocument } from 'client/types/state';
 
 export const activeDocument = (
     state: IActiveDocument = getDefaultDocumentList(),
-    action: DocumentAction,
+    action: TDocumentAction,
 ): IActiveDocument => {
     let newState: IActiveDocument = state;
 

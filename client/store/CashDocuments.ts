@@ -1,9 +1,12 @@
-import { CashDocumentsAction, ECashDocuments } from 'client/types/actions';
+import {
+    ECashDocuments,
+    TCashDocumentsAction,
+} from 'client/types/actions';
 import { ICashDocument } from 'client/types/state';
 
 export const cacheDocument = (
     state: ICashDocument = getDefaultTCompleteDocuments(),
-    action: CashDocumentsAction,
+    action: TCashDocumentsAction,
 ): ICashDocument => {
     let newState: ICashDocument;
 

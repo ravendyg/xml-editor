@@ -8,6 +8,8 @@ import { ViewHOC } from 'client/containers/ViewHOC';
 import { documentService } from 'client/services/DocumentService';
 import { store } from 'client/store';
 
+import { ModalsHOC } from 'client/containers/ModalsHOC';
+
 require('./styles.scss');
 
 const actions = createActions(store, documentService);
@@ -17,6 +19,7 @@ const App = () => (
         <div>
             <HeaderHOC actions={actions} />
             <ViewHOC actions={actions} />
+            <ModalsHOC actions={actions} />
         </div>
     </Provider>
 );

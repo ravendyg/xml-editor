@@ -4,8 +4,14 @@ import {
     TCompleteDocument,
     TDocumentInfo,
 } from 'client/types/dataTypes';
-import { IError } from 'client/types/dataTypes';
-import { ELoadStatus } from 'client/types/enums';
+import {
+    IError,
+    TNodeContextMenu,
+} from 'client/types/dataTypes';
+import {
+    ELoadStatus,
+    EModalTypes,
+} from 'client/types/enums';
 import { Dispatch } from 'redux';
 
 /**
@@ -18,8 +24,9 @@ export interface IStore extends Store<IState> {}
  */
 export interface IState {
     activeDocument: IActiveDocument;
-    documentList: IDocumentList;
     cacheDocument: ICashDocument;
+    documentList: IDocumentList;
+    modals: EModal[];
 }
 
 /**
@@ -62,3 +69,10 @@ export interface IActiveDocument {
 export interface ICashDocument {
     [docId: string]: TCompleteDocument;
 }
+
+/**
+ * List of modal windows
+ */
+export declare type EModal =
+    { type: EModalTypes.NODE_CONTEXT, payload: TNodeContextMenu }
+    ;

@@ -85,3 +85,16 @@ export declare type TMoveInfo = {
     key: string;
     direction: EMoveDirections;
 };
+
+/**
+ * Information about context menu
+ *
+ * @prop {string} id Node id
+ * @prop {number} x X coordinate of the click
+ * @prop {number} y Y coordinate of the click
+ */
+export declare type TNodeContextMenu = {
+    id: string;
+    x: number;
+    y: number;
+};

@@ -12,3 +12,7 @@ export const enum EMoveDirections {
     UP = 'UP',
     DOWN = 'DOWN',
 }
+
+export const enum EModalTypes {
+    NODE_CONTEXT = 'NODE_CONTEXT',
+}

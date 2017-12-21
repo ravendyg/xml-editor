@@ -69,7 +69,7 @@ const parseAttribute = (input: string): TAttribute => {
  * @param {string} input
  */
 export const parseEditInput = (input: string) => {
-    let attrs: TAttribute[] = [];
+    let attrs: TAttribute [] = [];
 
     const sanitized = input.replace(notAllowedSymbols, '').replace(/\s/g, ' ');
     let { tagName, rest } = getTagName(sanitized);

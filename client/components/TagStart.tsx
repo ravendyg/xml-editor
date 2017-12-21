@@ -114,6 +114,18 @@ export class TagStart extends React.PureComponent<IProps, IState> {
     handleMoveDown = () => this.moveNode(EMoveDirections.DOWN);
 
     /**
+     * Handle right click on the node start tag
+     */
+    handleContextMenu = (event: React.SyntheticEvent<HTMLElement>) => {
+        const nativeEvent = event.nativeEvent as MouseEvent;
+        nativeEvent.preventDefault();
+        const { clientX, clientY } = nativeEvent;
+        const { id } = this.props;
+        const { actions: { showNodeContextMenu } } = this.props;
+        showNodeContextMenu({id, x: clientX, y: clientY});
+    }
+
+    /**
      * Toggle editor
      */
     toggleBeingEdited = () => {
@@ -197,7 +209,7 @@ export class TagStart extends React.PureComponent<IProps, IState> {
         }
 
         return(
-            <div className="tag-start">
+            <div className="tag-start" onContextMenu={this.handleContextMenu}>
                 <span className="tag-start--btns">
                     <button
                         onClick={this.handleCreateClick}

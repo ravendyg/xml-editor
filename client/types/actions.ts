@@ -7,6 +7,7 @@ import {
 import {
     IError,
     TMoveInfo,
+    TNodeContextMenu,
     TNodeInfo,
 } from 'client/types/dataTypes';
 
@@ -37,7 +38,7 @@ export const enum EDocumentAction {
     REMOVE_NODE = 'REMOVE_NODE',
 }
 
-export declare type DocumentAction =
+export declare type TDocumentAction =
     IAction<EDocumentAction.LOAD_START, null>
     | IAction<EDocumentAction.LOAD_SUCCESS, TCompleteDocument>
     | IAction<EDocumentAction.LOAD_ERROR, IError>
@@ -52,7 +53,17 @@ export const enum ECashDocuments {
     REMOVE_DOCUMENT = 'CASH_REMOVE_DOCUMENT',
 }
 
-export declare type CashDocumentsAction =
+export declare type TCashDocumentsAction =
     IAction<ECashDocuments.ADD_DOCUMENT, TCompleteDocument>
     | IAction<ECashDocuments.REMOVE_DOCUMENT, string>
+    ;
+
+export const enum EModalsActions {
+    HIDE_ALL_MODALS = 'HIDE_ALL_MODALS',
+    SHOW_NODE_CONTEXT_MENU = 'SHOW_NODE_CONTEXT_MENU',
+}
+
+export declare type TModalsAction =
+    IAction<EModalsActions.HIDE_ALL_MODALS, null>
+    | IAction<EModalsActions.SHOW_NODE_CONTEXT_MENU, TNodeContextMenu>
     ;

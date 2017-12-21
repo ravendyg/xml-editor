@@ -2,6 +2,7 @@ import { createActionCreators } from 'client/actions/action-creators';
 import {
     TCompleteDocument,
     TMoveInfo,
+    TNodeContextMenu,
     TNodeInfo,
 } from 'client/types/dataTypes';
 import { ELoadStatus } from 'client/types/enums';
@@ -10,37 +11,16 @@ import { IStore } from 'client/types/state';
 
 export interface IActions {
     loadDocumentList: () => Promise<void>;
-    selectDocument: (docId: string) => Promise<void>;
-    removeNode: (nodeId: string) => void;
+    hideAllModals: () => void;
     moveNode: (moveInfo: TMoveInfo) => void;
+    removeNode: (nodeId: string) => void;
+    selectDocument: (docId: string) => void;
     updateNode: (nodeInfo: TNodeInfo) => void;
+    showNodeContextMenu: (nodeContect: TNodeContextMenu) => void;
 }
 
 export const createActions = (store: IStore, documentService: IDocumentService): IActions => {
     const actionCreators = createActionCreators(store);
-
-    const selectDocument = (docId: string) => {
-        // cache currently selected doc, if any
-        const { data, status } = store.getState().activeDocument;
-        if (status === ELoadStatus.IDLE && data) {
-            actionCreators.addDocument(data);
-        }
-
-        // load the selected one
-        const cachedDoc: TCompleteDocument = store.getState().cacheDocument[docId];
-        if (cachedDoc) {
-            actionCreators.confirmDocLoad(cachedDoc);
-            return Promise.resolve();
-        } else {
-            actionCreators.startDocLoad();
-            return documentService.getTCompleteDocument(docId)
-            .then(doc => {
-                actionCreators.confirmDocLoad(doc);
-                actionCreators.addDocument(doc);
-            })
-            .catch(actionCreators.errorDocLoad);
-        }
-    };
 
     const loadDocumentList = () => {
         actionCreators.startListLoad();
@@ -56,17 +36,46 @@ export const createActions = (store: IStore, documentService: IDocumentService):
         .catch(actionCreators.errorListLoad);
     };
 
-    const removeNode = (nodeId: string) => {
-        if (nodeId !== 'root') {
-            actionCreators.removeNode(nodeId);
-        }
-    };
+    const hideAllModals = actionCreators.hideAllModals;
 
     const moveNode = (moveInfo: TMoveInfo) => {
         const { key } = moveInfo;
         if (key !== 'root') {
             actionCreators.moveNode(moveInfo);
         }
+    };
+
+    const removeNode = (nodeId: string) => {
+        if (nodeId !== 'root') {
+            actionCreators.removeNode(nodeId);
+        }
+    };
+
+    const selectDocument = (docId: string) => {
+        // cache currently selected doc, if any
+        const { data, status } = store.getState().activeDocument;
+        if (status === ELoadStatus.IDLE && data) {
+            actionCreators.addDocument(data);
+        }
+
+        // load the selected one
+        const cachedDoc: TCompleteDocument = store.getState().cacheDocument[docId];
+        if (cachedDoc) {
+            actionCreators.confirmDocLoad(cachedDoc);
+            Promise.resolve();
+        } else {
+            actionCreators.startDocLoad();
+            documentService.getTCompleteDocument(docId)
+            .then(doc => {
+                actionCreators.confirmDocLoad(doc);
+                actionCreators.addDocument(doc);
+            })
+            .catch(actionCreators.errorDocLoad);
+        }
+    };
+
+    const showNodeContextMenu = (nodeContext: TNodeContextMenu) => {
+        actionCreators.showNodeContextMenu(nodeContext);
     };
 
     const updateNode = (nodeInfo: TNodeInfo) => {
@@ -78,9 +87,11 @@ export const createActions = (store: IStore, documentService: IDocumentService):
 
     return {
         loadDocumentList,
-        selectDocument,
-        removeNode,
+        hideAllModals,
         moveNode,
+        removeNode,
+        selectDocument,
+        showNodeContextMenu,
         updateNode,
     };
 };

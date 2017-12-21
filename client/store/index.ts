@@ -4,13 +4,15 @@ import { IStore } from 'client/types/state';
 import { activeDocument } from './ActiveDocument';
 import { cacheDocument } from './CashDocuments';
 import { documentList } from './DocumentList';
+import { modals } from './Modals';
 
 const
     win: any = window,
     reducers = combineReducers({
         activeDocument,
-        documentList,
         cacheDocument,
+        documentList,
+        modals,
     })
     ;
 
