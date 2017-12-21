@@ -21,42 +21,74 @@ const docs: {[key: string]: TCompleteDocument} = {
         name: 'document 1',
         model: {
             'root': {
-                name: 'document',
                 attrs: [],
                 children: ['q', 'w'],
+                parent: '',
+                tagName: 'document',
             },
             'q': {
-                name: 'div',
                 attrs: [{
-                        name: 'color', value: 'green',
-                    }, {
-                        name: 'checked'
+                    attrName: 'color', value: 'green',
+                }, {
+                    attrName: 'checked'
                 }],
                 children: ['a', 's'],
+                parent: 'root',
+                tagName: 'div',
             },
             'w': {
-                name: 'div',
                 attrs: [],
-                children: ['d'],
+                children: ['d1', 'd2', 'd3', 'd4'],
+                parent: 'root',
+                tagName: 'div',
             },
             'a': {
-                name: 'span',
                 attrs: [{
-                        name: 'id', value: 'some-id',
-                    }, {
-                        name: 'class', value: 'some-class'
+                    attrName: 'id', value: 'some-id',
+                }, {
+                    attrName: 'class', value: 'some-class'
                 }],
                 children: [],
+                parent: 'q',
+                tagName: 'span',
             },
             's': {
-                name: 'span',
                 attrs: [],
                 children: [],
+                parent: 'q',
+                tagName: 'span',
             },
-            'd': {
-                name: 'span',
-                attrs: [],
+            'd1': {
+                attrs: [{
+                    attrName: 'num1'
+                }],
                 children: [],
+                parent: 'w',
+                tagName: 'span',
+            },
+            'd2': {
+                attrs: [{
+                    attrName: 'num2'
+                }],
+                children: [],
+                parent: 'w',
+                tagName: 'span',
+            },
+            'd3': {
+                attrs: [{
+                    attrName: 'num3'
+                }],
+                children: [],
+                parent: 'w',
+                tagName: 'span',
+            },
+            'd4': {
+                attrs: [{
+                    attrName: 'num4'
+                }],
+                children: [],
+                parent: 'w',
+                tagName: 'span',
             },
         },
     },
@@ -65,9 +97,10 @@ const docs: {[key: string]: TCompleteDocument} = {
         name: 'document 2',
         model: {
             'root': {
-                name: 'document',
                 attrs: [],
                 children: [],
+                parent: '',
+                tagName: 'document',
             },
         },
     },

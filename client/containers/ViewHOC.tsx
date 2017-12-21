@@ -17,7 +17,7 @@ interface IProps extends IOwnProps, IActiveDocument {
 }
 
 export const View = (props: IProps) => {
-    const { exists, data, status } = props;
+    const { actions, data, exists, status } = props;
     let content;
     switch (status) {
         case ELoadStatus.RUNNING: {
@@ -29,8 +29,8 @@ export const View = (props: IProps) => {
                 if (data) {
                     content =
                         <NodeHOC
+                            actions={actions}
                             id={'root'}
-                            index={0}
                             level={0}
                         />;
                 } else {

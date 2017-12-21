@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 
+import { IActions } from 'client/actions';
 import {
     TCompleteDocument,
     TNode,
@@ -10,57 +11,61 @@ import { TagEnd } from '../components/TagEnd';
 import { TagStart } from '../components/TagStart';
 
 /**
+ * @prop {IActions} actions All actions connected to redux
  * @prop {number} id
  * @prop {number} level How deep it is situated in the tree
- * @prop {number} index
  */
-export interface INodeProps {
+interface IOwnProps {
+    actions: IActions;
     id: string;
     level: number;
-    index: number;
 }
 
 /**
- * @prop {number} index
- * @prop {number} level How deep it is situated in the tree
  * @prop {TNode} node
  */
-interface IProps {
-    index: number;
-    level: number;
-    node: TNode;
+interface IProps extends IOwnProps {
+    node: TNode | undefined;
 }
 
-export const Node = (props: IProps): JSX.Element => {
-    const { node, index, level } = props;
+export const Node = (props: IProps): JSX.Element | null => {
+    const { actions, id, level, node } = props;
+    if (!node) {
+        return null;
+    }
+
+    const { children } = node;
 
     // TODO: If node has no children use /> for closing
     return(
         <div>
-            <TagStart node={node} index={index} level={level}/>
-            {node.children.map((id, index) =>
+            <TagStart
+                actions={actions}
+                id={id}
+                level={level}
+                node={node}
+            />
+            {children.map((id, index) =>
                 <NodeHOC
                     key={index}
+                    actions={actions}
                     id={id}
-                    index={index}
                     level={level + 1}
                 />
             )}
-            <TagEnd node={node} level={level}/>
+            {children.length ? <TagEnd node={node} level={level}/> : null}
         </div>
     );
 };
 
-const mapStateToProps = (state: IState, props: INodeProps): IProps => {
+const mapStateToProps = (state: IState, props: IOwnProps): IProps => {
     const
         data = state.activeDocument.data as TCompleteDocument,  // null has been handled before
-        node = data.model[props.id],
-        { index, level } = props
+        node = data.model[props.id]
         ;
 
     return {
-        index,
-        level,
+        ...props,
         node,
     };
 };

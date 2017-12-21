@@ -1,9 +1,12 @@
+import {
+    ECashDocuments,
+    TCashDocumentsAction,
+} from 'client/types/actions';
 import { ICashDocument } from 'client/types/state';
-import { ECashDocuments, CashDocumentsAction } from 'client/types/actions';
 
-export const cashDocument = (
+export const cacheDocument = (
     state: ICashDocument = getDefaultTCompleteDocuments(),
-    action: CashDocumentsAction,
+    action: TCashDocumentsAction,
 ): ICashDocument => {
     let newState: ICashDocument;
 
@@ -29,7 +32,7 @@ export const cashDocument = (
     }
 
     return newState;
-}
+};
 
 export function getDefaultTCompleteDocuments(): ICashDocument {
     return {

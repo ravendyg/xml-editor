@@ -1,16 +1,18 @@
 import { combineReducers, createStore } from 'redux';
 
-import { documentList } from './DocumentList';
-import { activeDocument } from './ActiveDocument';
 import { IStore } from 'client/types/state';
-import { cashDocument } from './CashDocuments';
+import { activeDocument } from './ActiveDocument';
+import { cacheDocument } from './CashDocuments';
+import { documentList } from './DocumentList';
+import { modals } from './Modals';
 
 const
     win: any = window,
     reducers = combineReducers({
         activeDocument,
+        cacheDocument,
         documentList,
-        cashDocument,
+        modals,
     })
     ;
 

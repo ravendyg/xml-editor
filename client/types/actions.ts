@@ -4,7 +4,12 @@ import {
     TCompleteDocument,
     TDocumentInfo,
 } from 'client/types/dataTypes';
-import { IError } from 'client/types/dataTypes';
+import {
+    IError,
+    TMoveInfo,
+    TNodeContextMenu,
+    TNodeInfo,
+} from 'client/types/dataTypes';
 
 export interface IAction<T, P> extends AnyAction {
     type: T;
@@ -23,16 +28,24 @@ export declare type TDocumentListAction =
     | IAction<EDocumentListAction.LOAD_ERROR, IError>
     ;
 
-export const enum ELoadDocumentAction {
+export const enum EDocumentAction {
     LOAD_START = 'DOCUMENT_LOAD_START',
     LOAD_SUCCESS = 'DOCUMENT_LOAD_SUCCESS',
     LOAD_ERROR = 'DOCUMENT_LOAD_ERROR',
+    ADD_EMPTY_CHILDREN = 'ADD_EMPTY_CHILDREN',
+    MOVE_NODE = 'MOVE_NODE',
+    UPDATE_NODE = 'UPDATE_NODE',
+    REMOVE_NODE = 'REMOVE_NODE',
 }
 
-export declare type LoadDocumentAction =
-    IAction<ELoadDocumentAction.LOAD_START, null>
-    | IAction<ELoadDocumentAction.LOAD_SUCCESS, TCompleteDocument>
-    | IAction<ELoadDocumentAction.LOAD_ERROR, IError>
+export declare type TDocumentAction =
+    IAction<EDocumentAction.LOAD_START, null>
+    | IAction<EDocumentAction.LOAD_SUCCESS, TCompleteDocument>
+    | IAction<EDocumentAction.LOAD_ERROR, IError>
+    | IAction<EDocumentAction.ADD_EMPTY_CHILDREN, string>
+    | IAction<EDocumentAction.MOVE_NODE, TMoveInfo>
+    | IAction<EDocumentAction.UPDATE_NODE, TNodeInfo>
+    | IAction<EDocumentAction.REMOVE_NODE, string>
     ;
 
 export const enum ECashDocuments {
@@ -40,7 +53,17 @@ export const enum ECashDocuments {
     REMOVE_DOCUMENT = 'CASH_REMOVE_DOCUMENT',
 }
 
-export declare type CashDocumentsAction =
+export declare type TCashDocumentsAction =
     IAction<ECashDocuments.ADD_DOCUMENT, TCompleteDocument>
     | IAction<ECashDocuments.REMOVE_DOCUMENT, string>
+    ;
+
+export const enum EModalsActions {
+    HIDE_ALL_MODALS = 'HIDE_ALL_MODALS',
+    SHOW_NODE_CONTEXT_MENU = 'SHOW_NODE_CONTEXT_MENU',
+}
+
+export declare type TModalsAction =
+    IAction<EModalsActions.HIDE_ALL_MODALS, null>
+    | IAction<EModalsActions.SHOW_NODE_CONTEXT_MENU, TNodeContextMenu>
     ;

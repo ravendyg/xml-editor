@@ -1,53 +1,212 @@
 import * as React from 'react';
 
-import { Attribute } from 'client/components/Attribute';
-import { TAG_OFFSET } from 'client/consts';
-import { TNode } from 'client/types/dataTypes';
+import { IActions } from 'client/actions';
+import {
+    TAG_OFFSET,
+    TAG_OFFSET_STEP,
+} from 'client/consts';
+import { KEY_CODES } from 'client/consts';
+import {
+    TNode,
+    TNodeInfo,
+} from 'client/types/dataTypes';
+import { EMoveDirections } from 'client/types/enums';
+import { parseEditInput } from 'client/utils/parseEditInput';
+
+declare type EMaybeInput = HTMLInputElement | null;
 
 /**
+ * @prop {IActions} actions All actions
  * @prop {string} id Node identifier
- * @prop {number} index Element index among children
  * @prop {number} level How deep it is situated in the tree
  * @prop {TNode} node
  */
 interface IProps {
+    actions: IActions;
     id: string;
-    index: number;
     level: number;
     node: TNode;
 }
 
-// TODO: Check that a Node that has not been changed doesn't rerender due to `connect`
-// otherwise replace with PureComponent
-export const TagStart = ({ node: { attrs, name }, index, level }: IProps) => {
-    // does not display 'document' as a separate entity
-    if (name === 'document') {
-        return null;
+/**
+ * Attribute state
+ *
+ * @prop {boolean} beingEdited Is attribute being edited right now
+ */
+interface IState {
+    beingEdited: boolean;
+}
+
+export class TagStart extends React.PureComponent<IProps, IState> {
+    private input: EMaybeInput;
+
+    constructor(props: IProps) {
+        super(props);
+        this.state = {
+            beingEdited: false,
+        };
     }
 
-    // TODO: Replace spans with clickable components
-    let tagBody =
-        attrs.map(
-            ({name, value}, attrIndex) => (
-                <Attribute
-                    key={`${index}.${attrIndex}`}
-                    name={name}
-                    value={value}
-                />
-            )
-        )
-        ;
-    const offset = (level * TAG_OFFSET);
-    const tagStyle = offset
-        ? { marginLeft: offset + 'px' }
-        : {}
-        ;
-    tagBody.push(<span key={`${index}.${attrs.length}.0`}>{'>'}</span>);
+    /**
+     * Tag edit input lost focus
+     *
+     * @param {React.SyntheticEvent<HTMLInputElement>} event
+     */
+    handleBlur = (event: React.SyntheticEvent<HTMLInputElement>) => {
+        const text = (event.target as HTMLInputElement).value;
+        const { actions, id, node: { parent } } = this.props;
+        const nodeInfo: TNodeInfo = {
+            key: id,
+            ...parseEditInput(text),
+            parent,
+        };
+        actions.updateNode(nodeInfo);
+        this.toggleBeingEdited();
+    }
 
-    return(
-        <div>
-            <span className="tag-start" style={tagStyle}>{`<${name}`}</span>
-            {tagBody}
-        </div>
-    );
-};
+    /**
+     * Tag edit input submit
+     *
+     * @param {React.KeyboardEvent<HTMLInputElement>} event
+     */
+    handleKeyUp = (event: React.KeyboardEvent<HTMLInputElement>) => {
+        if (event.keyCode === KEY_CODES.Enter) {
+            (event.target as HTMLInputElement).blur();
+        }
+    }
+
+    /**
+     * Move this node
+     *
+     * @param {EMoveDirections} direction
+     */
+    moveNode = (direction: EMoveDirections) => {
+        const { actions: { moveNode }, id } = this.props;
+        moveNode({
+            key: id,
+            direction,
+        });
+    }
+
+    /**
+     * Move this node up
+     */
+    handleMoveUp = () => this.moveNode(EMoveDirections.UP);
+
+    /**
+     * Move this node down
+     */
+    handleMoveDown = () => this.moveNode(EMoveDirections.DOWN);
+
+    /**
+     * Handle right click on the node start tag
+     */
+    handleContextMenu = (event: React.SyntheticEvent<HTMLElement>) => {
+        const nativeEvent = event.nativeEvent as MouseEvent;
+        nativeEvent.preventDefault();
+        const { clientX, clientY } = nativeEvent;
+        const { id } = this.props;
+        const { actions: { showNodeContextMenu } } = this.props;
+        showNodeContextMenu({id, x: clientX, y: clientY});
+    }
+
+    /**
+     * Toggle editor
+     */
+    toggleBeingEdited = () => {
+        this.setState((prevState: IState) => ({
+            beingEdited: !prevState.beingEdited,
+        }));
+    }
+
+    /**
+     * Update reference
+     */
+    setInput = (ref: EMaybeInput) => this.input = ref;
+
+    /**
+     * Set focus on the input field (after it has been created)
+     */
+    focusOnInput = () => {
+        if (this.input) {
+            this.input.focus();
+        }
+    }
+
+    render() {
+        const {
+            node: { attrs, children, tagName },
+            level,
+        } = this.props;
+        const { beingEdited } = this.state;
+
+        // does not display 'document' as a separate entity
+        if (tagName === 'document') {
+            return null;
+        }
+
+        let text = '';
+        attrs.forEach(
+            ({attrName, value}) => {
+                text += value
+                    ? ` ${attrName}="${value}"`
+                    : ` ${attrName} `
+                    ;
+            }
+        );
+
+        const offset = TAG_OFFSET + (level * TAG_OFFSET_STEP);
+        const tagStyle = offset
+            ? { marginLeft: offset + 'px' }
+            : {}
+            ;
+
+        let element;
+        if (beingEdited) {
+            setImmediate(this.focusOnInput);
+            text = tagName + text;
+            // matching input and it's content width would require to much of an effort
+            element = (
+                <input
+                    defaultValue={text}
+                    className={'tag-start--input'}
+                    onBlur={this.handleBlur}
+                    onKeyUp={this.handleKeyUp}
+                    ref={this.setInput}
+                    style={tagStyle}
+                />
+            );
+        } else {
+            const suffix =
+                (attrs.length ? ' ' : '')
+                + (children.length ? '>' : '/>')
+                ;
+            text = `<${tagName}${text}${suffix}`;
+            element = (
+                <span
+                    className={'tag-start--tag'}
+                    onDoubleClick={this.toggleBeingEdited}
+                    style={tagStyle}
+                >
+                    {text}
+                </span>
+            );
+        }
+
+        return(
+            <div className="tag-start" onContextMenu={this.handleContextMenu} title="Right click for more options">
+                <span className="tag-start--btns">
+                    <button
+                        onClick={this.handleMoveUp}
+                        title="Move node up"
+                    >▲</button>
+                    <button
+                        onClick={this.handleMoveDown}
+                        title="Move node down"
+                    >▼</button>
+                </span>
+                {element}
+            </div>
+        );
+    }
+}

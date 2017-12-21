@@ -1,22 +1,14 @@
 const
     path = require('path'),
-    old = process.argv.find(el => el === '--env.old') ? '-old' : '',
     targets = {
-        targets: old ?
-            {
-                // css will fail on ie < 11 - no point to support them
-                ie: '11'
-            } :
-            {
-                chrome: 62,
-                firefox: 56,
-                edge: 16,
-                safari: 11,
-                opera: 48,
-            }
+        targets: {
+            // phantom is old ((
+            ie: '11'
+        }
     },
     include = [
-        path.resolve(__dirname, 'client')
+        path.resolve(__dirname, 'client'),
+        path.resolve(__dirname, 'tests'),
     ],
     babelLoader = {
         loader: 'babel-loader',
@@ -30,12 +22,12 @@ const
 
 module.exports = {
     entry: {
-        app: path.resolve(__dirname, 'client', 'app.tsx'),
+        app: path.resolve(__dirname, 'tests', 'index.ts'),
     },
 
     output: {
-        path: path.resolve(__dirname, 'public'),
-        filename: 'app.js',
+        path: path.resolve(__dirname, 'build-test'),
+        filename: 'test.bundle.js',
     },
 
     module: {
@@ -80,7 +72,7 @@ module.exports = {
         ],
         alias: {},
 
-        extensions: ['.js', '.jsx', '.ts', '.tsx', '.css'],
+        extensions: ['.js', '.jsx', '.ts', '.tsx'],
     },
 
     performance: {

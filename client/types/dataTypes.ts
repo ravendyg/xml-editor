@@ -1,4 +1,7 @@
-import { EErrorCodes } from 'client/types/enums';
+import {
+    EErrorCodes,
+    EMoveDirections,
+} from 'client/types/enums';
 
 /**
  * List of available documents
@@ -18,21 +21,37 @@ export declare type TDocumentInfo = {
  * @prop {string} [value]
  */
 export declare type TAttribute = {
-    name: string;
+    attrName: string;
     value?: string;
 };
 
 /**
  * Node === tag
  *
- * @prop {string} name Like div, span, etc.
  * @prop {TAttribute[]} attrs
  * @prop {string[]} children Children ids
+ * @prop {string} parent Node parent
+ * @prop {string} tagName Like div, span, etc.
  */
 export declare type TNode = {
-    name: string;
     attrs: TAttribute[];
     children: string[];
+    parent: string;
+    tagName: string;
+};
+
+/**
+ * Transport container for node update info (children not included)
+ *
+ * @prop {TAttribute[]} attrs
+ * @prop {string} parent Node parent
+ * @prop {string} tagName Like div, span, etc.
+ */
+export declare type TNodeInfo = {
+    attrs: TAttribute[];
+    key: string;
+    parent: string;
+    tagName: string;
 };
 
 /**
@@ -57,3 +76,25 @@ export declare type TCompleteDocument = {
 export interface IError extends Error {
     code: EErrorCodes;
 }
+
+/**
+ * @prop {string} key Node key
+ * @prop {EMoveDirections} direction
+ */
+export declare type TMoveInfo = {
+    key: string;
+    direction: EMoveDirections;
+};
+
+/**
+ * Information about context menu
+ *
+ * @prop {string} id Node id
+ * @prop {number} x X coordinate of the click
+ * @prop {number} y Y coordinate of the click
+ */
+export declare type TNodeContextMenu = {
+    id: string;
+    x: number;
+    y: number;
+};
