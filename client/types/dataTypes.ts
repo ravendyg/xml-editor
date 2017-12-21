@@ -73,3 +73,8 @@ export declare type TCompleteDocument = {
 export interface IError extends Error {
     code: EErrorCodes;
 }
+
+export declare type TMoveInfo = {
+    position: number;
+    direction: -1 | 1;
+};

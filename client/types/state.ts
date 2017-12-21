@@ -19,7 +19,7 @@ export interface IStore extends Store<IState> {}
 export interface IState {
     activeDocument: IActiveDocument;
     documentList: IDocumentList;
-    cashDocument: ICashDocument;
+    cacheDocument: ICashDocument;
 }
 
 /**

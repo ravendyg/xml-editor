@@ -1,9 +1,9 @@
+import { createActionCreators } from 'client/actions/action-creators';
 import {
-    ECashDocuments,
-    EDocumentAction,
-    EDocumentListAction,
-} from 'client/types/actions';
-import { TCompleteDocument, TNodeInfo } from 'client/types/dataTypes';
+    TCompleteDocument,
+    TMoveInfo,
+    TNodeInfo,
+} from 'client/types/dataTypes';
 import { ELoadStatus } from 'client/types/enums';
 import { IDocumentService } from 'client/types/services';
 import { IStore } from 'client/types/state';
@@ -12,97 +12,64 @@ export interface IActions {
     loadDocumentList: () => Promise<void>;
     selectDocument: (docId: string) => Promise<void>;
     removeNode: (nodeId: string) => void;
+    moveNode: (moveInfo: TMoveInfo) => void;
     updateNode: (nodeInfo: TNodeInfo) => void;
 }
 
 export const createActions = (store: IStore, documentService: IDocumentService): IActions => {
+    const actionCreators = createActionCreators(store);
+
     const selectDocument = (docId: string) => {
-        // cash currently selected doc, if any
+        // cache currently selected doc, if any
         const { data, status } = store.getState().activeDocument;
         if (status === ELoadStatus.IDLE && data) {
-            store.dispatch({
-                type: ECashDocuments.ADD_DOCUMENT,
-                payload: data,
-            });
+            actionCreators.addDocument(data);
         }
 
         // load the selected one
-        const cashedDoc: TCompleteDocument = store.getState().cashDocument[docId];
-        if (cashedDoc) {
-            store.dispatch({
-                type: EDocumentAction.LOAD_SUCCESS,
-                payload: cashedDoc,
-            });
+        const cachedDoc: TCompleteDocument = store.getState().cacheDocument[docId];
+        if (cachedDoc) {
+            actionCreators.confirmDocLoad(cachedDoc);
             return Promise.resolve();
         } else {
-            store.dispatch({
-                type: EDocumentAction.LOAD_START,
-                payload: null,
-            });
+            actionCreators.startDocLoad();
             return documentService.getTCompleteDocument(docId)
             .then(doc => {
-                store.dispatch({
-                    type: EDocumentAction.LOAD_SUCCESS,
-                    payload: doc,
-                });
-                store.dispatch({
-                    type: ECashDocuments.ADD_DOCUMENT,
-                    payload: doc,
-                });
+                actionCreators.confirmDocLoad(doc);
+                actionCreators.addDocument(doc);
             })
-            .catch(error => {
-                store.dispatch({
-                    type: EDocumentAction.LOAD_ERROR,
-                    payload: error,
-                });
-            });
+            .catch(actionCreators.errorDocLoad);
         }
     };
 
     const loadDocumentList = () => {
-        store.dispatch({
-            type: EDocumentListAction.LOAD_START,
-            payload: null,
-        });
+        actionCreators.startListLoad();
         return documentService.getDocumentList()
         .then(documents => {
-            store.dispatch({
-                type: EDocumentListAction.LOAD_SUCCESS,
-                payload: documents,
-            });
+            actionCreators.confirmListLoad(documents);
             // select first document by default
             const doc = store.getState().activeDocument;
             if (doc.data === null && doc.status === ELoadStatus.RUNNING) {
-                store.dispatch({
-                    type: EDocumentAction.LOAD_SUCCESS,
-                    payload: null,
-                });
+                actionCreators.confirmDocLoad(null);
             }
         })
-        .catch(error => {
-            store.dispatch({
-                type: EDocumentListAction.LOAD_ERROR,
-                payload: error,
-            });
-        });
+        .catch(actionCreators.errorListLoad);
     };
 
     const removeNode = (nodeId: string) => {
         if (nodeId !== 'root') {
-            store.dispatch({
-                type: EDocumentAction.REMOVE_NODE,
-                payload: nodeId,
-            });
+            actionCreators.removeNode(nodeId);
         }
     };
 
-    const updateNode = (payload: TNodeInfo) => {
-        const { key } = payload;
+    const moveNode = (moveInfo: TMoveInfo) => {
+        actionCreators.moveNode(moveInfo);
+    };
+
+    const updateNode = (nodeInfo: TNodeInfo) => {
+        const { key } = nodeInfo;
         if (key !== 'root') {
-            store.dispatch({
-                type: EDocumentAction.UPDATE_NODE,
-                payload,
-            });
+            actionCreators.updateNode(nodeInfo);
         }
     };
 
@@ -110,6 +77,7 @@ export const createActions = (store: IStore, documentService: IDocumentService):
         loadDocumentList,
         selectDocument,
         removeNode,
+        moveNode,
         updateNode,
     };
 };

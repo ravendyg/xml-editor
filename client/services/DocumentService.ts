@@ -38,7 +38,7 @@ const docs: {[key: string]: TCompleteDocument} = {
             },
             'w': {
                 attrs: [],
-                children: ['d'],
+                children: ['d1', 'd2', 'd3', 'd4'],
                 parent: 'root',
                 tagName: 'div',
             },

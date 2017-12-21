@@ -4,7 +4,11 @@ import {
     TCompleteDocument,
     TDocumentInfo,
 } from 'client/types/dataTypes';
-import { IError, TNodeInfo } from 'client/types/dataTypes';
+import {
+    IError,
+    TMoveInfo,
+    TNodeInfo,
+} from 'client/types/dataTypes';
 
 export interface IAction<T, P> extends AnyAction {
     type: T;
@@ -28,6 +32,7 @@ export const enum EDocumentAction {
     LOAD_SUCCESS = 'DOCUMENT_LOAD_SUCCESS',
     LOAD_ERROR = 'DOCUMENT_LOAD_ERROR',
     ADD_EMPTY_CHILDREN = 'ADD_EMPTY_CHILDREN',
+    MOVE_NODE = 'MOVE_NODE',
     UPDATE_NODE = 'UPDATE_NODE',
     REMOVE_NODE = 'REMOVE_NODE',
 }
@@ -37,6 +42,7 @@ export declare type DocumentAction =
     | IAction<EDocumentAction.LOAD_SUCCESS, TCompleteDocument>
     | IAction<EDocumentAction.LOAD_ERROR, IError>
     | IAction<EDocumentAction.ADD_EMPTY_CHILDREN, string>
+    | IAction<EDocumentAction.MOVE_NODE, TMoveInfo>
     | IAction<EDocumentAction.UPDATE_NODE, TNodeInfo>
     | IAction<EDocumentAction.REMOVE_NODE, string>
     ;

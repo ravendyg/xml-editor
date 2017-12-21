@@ -21,7 +21,7 @@ export const TagEnd = ({ node: { tagName }, level }: IProps) => {
     if (tagName === 'document') {
         return null;
     }
-console.log(level)
+
     const offset = BTN_WIDTH + TAG_OFFSET + (level * TAG_OFFSET_STEP);
     const tagStyle = offset
         ? { marginLeft: offset + 'px' }

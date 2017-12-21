@@ -3,14 +3,14 @@ import { combineReducers, createStore } from 'redux';
 import { documentList } from './DocumentList';
 import { activeDocument } from './ActiveDocument';
 import { IStore } from 'client/types/state';
-import { cashDocument } from './CashDocuments';
+import { cacheDocument } from './CashDocuments';
 
 const
     win: any = window,
     reducers = combineReducers({
         activeDocument,
         documentList,
-        cashDocument,
+        cacheDocument,
     })
     ;
 
