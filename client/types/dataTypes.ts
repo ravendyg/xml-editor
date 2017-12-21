@@ -1,4 +1,7 @@
-import { EErrorCodes } from 'client/types/enums';
+import {
+    EErrorCodes,
+    EMoveDirections,
+} from 'client/types/enums';
 
 /**
  * List of available documents
@@ -74,7 +77,11 @@ export interface IError extends Error {
     code: EErrorCodes;
 }
 
+/**
+ * @prop {string} key Node key
+ * @prop {EMoveDirections} direction
+ */
 export declare type TMoveInfo = {
-    position: number;
-    direction: -1 | 1;
+    key: string;
+    direction: EMoveDirections;
 };

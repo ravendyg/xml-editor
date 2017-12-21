@@ -10,6 +10,7 @@ import {
     TNode,
     TNodeInfo,
 } from 'client/types/dataTypes';
+import { EMoveDirections } from 'client/types/enums';
 import { parseEditInput } from 'client/utils/parseEditInput';
 
 declare type EMaybeInput = HTMLInputElement | null;
@@ -85,9 +86,32 @@ export class TagStart extends React.PureComponent<IProps, IState> {
      * Remove node click handler
      */
     handleRemoveClick = () => {
-        const { id, actions: { removeNode } } = this.props;
+        const { actions: { removeNode }, id } = this.props;
         removeNode(id);
     }
+
+    /**
+     * Move this node
+     *
+     * @param {EMoveDirections} direction
+     */
+    moveNode = (direction: EMoveDirections) => {
+        const { actions: { moveNode }, id } = this.props;
+        moveNode({
+            key: id,
+            direction,
+        });
+    }
+
+    /**
+     * Move this node up
+     */
+    handleMoveUp = () => this.moveNode(EMoveDirections.UP);
+
+    /**
+     * Move this node down
+     */
+    handleMoveDown = () => this.moveNode(EMoveDirections.DOWN);
 
     /**
      * Toggle editor
@@ -183,6 +207,14 @@ export class TagStart extends React.PureComponent<IProps, IState> {
                         onClick={this.handleRemoveClick}
                         title="Remove node"
                     >X</button>
+                    <button
+                        onClick={this.handleMoveUp}
+                        title="Move node up"
+                    >▲</button>
+                    <button
+                        onClick={this.handleMoveDown}
+                        title="Move node down"
+                    >▼</button>
                 </span>
                 {element}
             </div>

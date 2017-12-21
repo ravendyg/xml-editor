@@ -1,9 +1,9 @@
 import { combineReducers, createStore } from 'redux';
 
-import { documentList } from './DocumentList';
-import { activeDocument } from './ActiveDocument';
 import { IStore } from 'client/types/state';
+import { activeDocument } from './ActiveDocument';
 import { cacheDocument } from './CashDocuments';
+import { documentList } from './DocumentList';
 
 const
     win: any = window,

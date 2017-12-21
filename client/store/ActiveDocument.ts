@@ -2,7 +2,10 @@ import {
     DocumentAction,
     EDocumentAction,
 } from 'client/types/actions';
-import { ELoadStatus } from 'client/types/enums';
+import {
+    ELoadStatus,
+    EMoveDirections,
+} from 'client/types/enums';
 import { IActiveDocument } from 'client/types/state';
 
 export const activeDocument = (
@@ -83,6 +86,52 @@ export const activeDocument = (
                     data: {
                         id,
                         model: newModel,
+                        name,
+                    },
+                    error: null,
+                    status: ELoadStatus.IDLE,
+                };
+            }
+            break;
+        }
+        case EDocumentAction.MOVE_NODE: {
+            const { direction, key } = action.payload;
+            if (state.data && state.data.model[key]) {
+                const { parent } = state.data.model[key];
+                const { children, ...rest } = state.data.model[parent];
+                const position = children.indexOf(key);
+                let newChildren;
+                // corner cases
+                if (position === -1) {
+                    throw new Error('Incorrect node key');
+                } else if (position === 0 && direction === EMoveDirections.UP) {
+                    newChildren = [...children.slice(1), key];
+                } else if (position === children.length - 1 && direction === EMoveDirections.DOWN) {
+                    newChildren = [key, ...children.slice(0, children.length - 1)];
+                // general
+                } else {
+                    newChildren = children.slice(0);
+                    let newIndex = position;
+                    if (direction === EMoveDirections.UP) {
+                        newIndex = position - 1;
+                    } else if (direction === EMoveDirections.DOWN) {
+                        newIndex = position + 1;
+                    }
+                    const tmp = newChildren[newIndex];
+                    newChildren[newIndex] = newChildren[position];
+                    newChildren[position] = tmp;
+                }
+                const { id, model, name } = state.data;
+                newState = {
+                    data: {
+                        id,
+                        model: {
+                            ...model,
+                            [parent]: {
+                                children: newChildren,
+                                ...rest,
+                            },
+                        },
                         name,
                     },
                     error: null,

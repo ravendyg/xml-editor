@@ -63,7 +63,10 @@ export const createActions = (store: IStore, documentService: IDocumentService):
     };
 
     const moveNode = (moveInfo: TMoveInfo) => {
-        actionCreators.moveNode(moveInfo);
+        const { key } = moveInfo;
+        if (key !== 'root') {
+            actionCreators.moveNode(moveInfo);
+        }
     };
 
     const updateNode = (nodeInfo: TNodeInfo) => {
