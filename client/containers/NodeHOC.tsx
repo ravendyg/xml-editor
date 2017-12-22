@@ -2,13 +2,14 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 
 import { IActions } from 'client/actions';
+import { EmptyTag } from 'client/components/EmptyTag';
+import { TagEnd } from 'client/components/TagEnd';
+import { TagStart } from 'client/components/TagStart';
 import {
     TCompleteDocument,
     TNode,
 } from 'client/types/dataTypes';
 import { IState } from 'client/types/state';
-import { TagEnd } from '../components/TagEnd';
-import { TagStart } from '../components/TagStart';
 
 /**
  * @prop {IActions} actions All actions connected to redux
@@ -32,32 +33,41 @@ export const Node = (props: IProps): JSX.Element | null => {
     const { actions, id, level, node } = props;
     if (!node) {
         return null;
-    }
-
-    const { children } = node;
-
-    // TODO: If node has no children use /> for closing
-    return(
-        <div>
-            <TagStart
+    } else if (id === 'empty') {
+        return(
+            <EmptyTag
                 actions={actions}
-                id={id}
                 level={level}
                 node={node}
             />
-            {children.map((id, index) =>
-                <NodeHOC
-                    key={index}
+        );
+    } else {
+        const { children } = node;
+        // TODO: If node has no children use /> for closing
+        return(
+            <div>
+                <TagStart
                     actions={actions}
                     id={id}
-                    level={level + 1}
+                    level={level}
+                    node={node}
                 />
-            )}
-            {children.length ? <TagEnd node={node} level={level}/> : null}
-        </div>
-    );
+                {children.map((id, index) =>
+                    <NodeHOC
+                        key={index}
+                        actions={actions}
+                        id={id}
+                        level={level + 1}
+                    />
+                )}
+                {children.length ? <TagEnd node={node} level={level}/> : null}
+            </div>
+        );
+    }
 };
 
+// this way mapper will be called for each node on any state change, even modal opening
+// better create a HOC for the whole 'model' and convert NodeHOC to PureComponent
 const mapStateToProps = (state: IState, props: IOwnProps): IProps => {
     const
         data = state.activeDocument.data as TCompleteDocument,  // null has been handled before

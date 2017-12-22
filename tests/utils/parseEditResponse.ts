@@ -1,5 +1,5 @@
 import { assert } from 'chai';
-import { parseEditInput } from 'client/utils/parseEditInput';
+import { parseEditInput } from 'client/utils';
 
 describe('parse tag info', () => {
 

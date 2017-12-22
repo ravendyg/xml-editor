@@ -18,7 +18,7 @@ export const NodeContextMenu = (props: INodeContextMenuProps) => {
         actions.hideAllModals();
     };
     const addChild = () => {
-        console.log('Add children to ' + id);
+        actions.addEmptyChild(id);
         actions.hideAllModals();
     };
 
