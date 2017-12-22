@@ -98,3 +98,5 @@ export declare type TNodeContextMenu = {
     x: number;
     y: number;
 };
+
+export declare type TMaybeInput = HTMLInputElement | null;

@@ -2,7 +2,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 
 import { IActions } from 'client/actions';
-import { TNodeContextMenu } from 'client/types/dataTypes';
+import { NodeContextMenu } from 'client/components/NodeContextMenu';
 import { EModalTypes } from 'client/types/enums';
 import {
     EModal,
@@ -24,42 +24,6 @@ const hasAmongParent = (node: HTMLElement | null, attrName: string, attrRegexp: 
     } else {
         return false;
     }
-};
-
-interface INodeContextMenuProps {
-    actions: IActions;
-    menuInfo: TNodeContextMenu;
-}
-
-export const NodeContextMenu = (props: INodeContextMenuProps) => {
-    const { actions, menuInfo: { id, x, y } } = props;
-    const style = {
-        transform: `translate(${x}px, ${y}px)`,
-    };
-    const removeNode = () => {
-        actions.removeNode(id);
-        actions.hideAllModals();
-    };
-    const addChild = () => {
-        console.log('Add children to ' + id);
-        actions.hideAllModals();
-    };
-
-    return(
-        <ul
-            className="node-context-menu"
-            style={style}
-        >
-            <li
-                className="node-context-menu--item"
-                onClick={addChild}
-            >Add a child</li>
-            <li
-                className="node-context-menu--item"
-                onClick={removeNode}
-            >Remove</li>
-        </ul>
-    );
 };
 
 const mapModalInfoToComponents = (modals: EModal[], actions: IActions) => {
@@ -85,6 +49,8 @@ const mapModalInfoToComponents = (modals: EModal[], actions: IActions) => {
 };
 
 const containerClassName = 'modals-container';
+
+const containerClassNameRegExp = new RegExp(containerClassName);
 
 interface IOwnProps {
     actions: IActions;
@@ -118,8 +84,16 @@ export class ModalsContainer extends React.Component<IProps, {}> {
      */
     handleClick = (event: MouseEvent) => {
         const target = event.target as HTMLElement;
-        if (!hasAmongParent(target, 'class', new RegExp(containerClassName))) {
+        if (!hasAmongParent(target, 'class', containerClassNameRegExp)) {
             this.props.actions.hideAllModals();
+        }
+    }
+
+    handleContext = (event: React.SyntheticEvent<any>) => {
+        const { modals } = this.props;
+        const lastModal = modals[modals.length - 1] || { type: '' };
+        if (lastModal.type === EModalTypes.NODE_CONTEXT) {
+            event.nativeEvent.preventDefault();
         }
     }
 
@@ -129,7 +103,7 @@ export class ModalsContainer extends React.Component<IProps, {}> {
         return(
             modalComponents.length
                 ? (
-                    <div className={containerClassName}>
+                    <div className={containerClassName} onContextMenu={this.handleContext}>
                         {modalComponents}
                     </div>
                 )

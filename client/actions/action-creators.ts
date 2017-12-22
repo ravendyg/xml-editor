@@ -20,12 +20,13 @@ declare type TActionCreatorWithouArgs = () => void;
 export interface IActionCreators {
     // cash
     addDocument: TActionCreator<TCompleteDocument | null>;
-    // lst
+    // list
     confirmDocLoad: TActionCreator<TCompleteDocument | null>;
     confirmListLoad: TActionCreator<TDocumentInfo[]>;
     errorListLoad: TActionCreator<Error>;
     startListLoad: TActionCreatorWithouArgs;
     // document
+    addChild: TActionCreator<string>;
     errorDocLoad: TActionCreator<Error>;
     moveNode: TActionCreator<TMoveInfo>;
     removeNode: TActionCreator<string>;
@@ -60,6 +61,10 @@ export const createActionCreators = (store: IStore): IActionCreators => ({
     },
 
     // document
+    addChild(payload: string) {
+        store.dispatch({ type: EDocumentAction.ADD_EMPTY_CHILD, payload });
+    },
+
     errorDocLoad(payload: Error) {
         store.dispatch({ type: EDocumentAction.LOAD_ERROR, payload });
     },

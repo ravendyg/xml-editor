@@ -10,7 +10,8 @@ import { IDocumentService } from 'client/types/services';
 import { IStore } from 'client/types/state';
 
 export interface IActions {
-    loadDocumentList: () => Promise<void>;
+    addEmptyChild: (nodeId: string) => void;
+    loadDocumentList: () => void;
     hideAllModals: () => void;
     moveNode: (moveInfo: TMoveInfo) => void;
     removeNode: (nodeId: string) => void;
@@ -22,9 +23,11 @@ export interface IActions {
 export const createActions = (store: IStore, documentService: IDocumentService): IActions => {
     const actionCreators = createActionCreators(store);
 
+    const addEmptyChild = actionCreators.addChild;
+
     const loadDocumentList = () => {
         actionCreators.startListLoad();
-        return documentService.getDocumentList()
+        documentService.getDocumentList()
         .then(documents => {
             actionCreators.confirmListLoad(documents);
             // select first document by default
@@ -86,6 +89,7 @@ export const createActions = (store: IStore, documentService: IDocumentService):
     };
 
     return {
+        addEmptyChild,
         loadDocumentList,
         hideAllModals,
         moveNode,

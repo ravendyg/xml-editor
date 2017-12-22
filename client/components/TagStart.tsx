@@ -7,13 +7,12 @@ import {
 } from 'client/consts';
 import { KEY_CODES } from 'client/consts';
 import {
+    TMaybeInput,
     TNode,
     TNodeInfo,
 } from 'client/types/dataTypes';
 import { EMoveDirections } from 'client/types/enums';
-import { parseEditInput } from 'client/utils/parseEditInput';
-
-declare type EMaybeInput = HTMLInputElement | null;
+import { parseEditInput } from 'client/utils';
 
 /**
  * @prop {IActions} actions All actions
@@ -37,14 +36,19 @@ interface IState {
     beingEdited: boolean;
 }
 
+// TODO: There is logic duplication with <EmptyTag/> - do smth about it
 export class TagStart extends React.PureComponent<IProps, IState> {
-    private input: EMaybeInput;
+    private input: TMaybeInput;
 
     constructor(props: IProps) {
         super(props);
         this.state = {
             beingEdited: false,
         };
+    }
+
+    componentDidMount() {
+        setImmediate(this.focusOnInput);
     }
 
     /**
@@ -55,13 +59,19 @@ export class TagStart extends React.PureComponent<IProps, IState> {
     handleBlur = (event: React.SyntheticEvent<HTMLInputElement>) => {
         const text = (event.target as HTMLInputElement).value;
         const { actions, id, node: { parent } } = this.props;
-        const nodeInfo: TNodeInfo = {
-            key: id,
-            ...parseEditInput(text),
-            parent,
-        };
-        actions.updateNode(nodeInfo);
-        this.toggleBeingEdited();
+        try {
+            const parsedInput = parseEditInput(text);
+            const nodeInfo: TNodeInfo = {
+                key: id,
+                ...parsedInput,
+                parent,
+            };
+            actions.updateNode(nodeInfo);
+            this.toggleBeingEdited();
+        } catch (e) {
+            // TODO: handle somehow and display to the user
+            throw e;
+        }
     }
 
     /**
@@ -70,8 +80,16 @@ export class TagStart extends React.PureComponent<IProps, IState> {
      * @param {React.KeyboardEvent<HTMLInputElement>} event
      */
     handleKeyUp = (event: React.KeyboardEvent<HTMLInputElement>) => {
-        if (event.keyCode === KEY_CODES.Enter) {
-            (event.target as HTMLInputElement).blur();
+        switch (event.keyCode) {
+            case KEY_CODES.Enter: {
+                (event.target as HTMLInputElement).blur();
+                break;
+            }
+            case KEY_CODES.Esc: {
+                (event.target as HTMLInputElement).value = '';
+                (event.target as HTMLInputElement).blur();
+                break;
+            }
         }
     }
 
@@ -122,7 +140,7 @@ export class TagStart extends React.PureComponent<IProps, IState> {
     /**
      * Update reference
      */
-    setInput = (ref: EMaybeInput) => this.input = ref;
+    setInput = (ref: TMaybeInput) => this.input = ref;
 
     /**
      * Set focus on the input field (after it has been created)

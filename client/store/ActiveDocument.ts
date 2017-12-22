@@ -39,11 +39,12 @@ export const activeDocument = (
             };
             break;
         }
-        case EDocumentAction.ADD_EMPTY_CHILDREN: {
+        case EDocumentAction.ADD_EMPTY_CHILD: {
             const key = action.payload;
-            if (state.data && state.data.model[key]) {
-                const { attrs, children, parent, tagName } = state.data.model[key];
-                const { id, model, name } = state.data;
+            const data = state.data;
+            if (data && data.model[key]) {
+                const { attrs, children, parent, tagName } = data.model[key];
+                const { id, model, name } = data;
                 newState = {
                     data: {
                         id,
@@ -54,6 +55,12 @@ export const activeDocument = (
                                 children: ['empty', ...children],
                                 parent,
                                 tagName,
+                            },
+                            'empty': {
+                                attrs: [],
+                                children: [],
+                                parent: key,
+                                tagName: '',
                             },
                         },
                         name,
@@ -67,8 +74,9 @@ export const activeDocument = (
         case EDocumentAction.REMOVE_NODE: {
             // remove node itself and a ref from the parent
             const key = action.payload;
-            if (state.data && state.data.model[key]) {
-                const { id, model, name } = state.data;
+            const data = state.data;
+            if (data && data.model[key]) {
+                const { id, model, name } = data;
                 const { parent } = model[key];
                 const parentNode = model[parent];
                 let newParent = {
@@ -96,9 +104,10 @@ export const activeDocument = (
         }
         case EDocumentAction.MOVE_NODE: {
             const { direction, key } = action.payload;
-            if (state.data && state.data.model[key]) {
-                const { parent } = state.data.model[key];
-                const { children, ...rest } = state.data.model[parent];
+            const data = state.data;
+            if (data && data.model[key]) {
+                const { parent } = data.model[key];
+                const { children, ...rest } = data.model[parent];
                 const position = children.indexOf(key);
                 let newChildren;
                 // corner cases
@@ -121,7 +130,7 @@ export const activeDocument = (
                     newChildren[newIndex] = newChildren[position];
                     newChildren[position] = tmp;
                 }
-                const { id, model, name } = state.data;
+                const { id, model, name } = data;
                 newState = {
                     data: {
                         id,
@@ -141,22 +150,40 @@ export const activeDocument = (
             break;
         }
         case EDocumentAction.UPDATE_NODE: {
-            const { key, attrs, tagName } = action.payload;
-            if (state.data && state.data.model[key]) {
-                const { children, parent } = state.data.model[key];
-                const { id, model, name } = state.data;
+            const { key, attrs, tagName, parent } = action.payload;
+            const { data } = state;
+            if (!data) {
+                // not sure how we came here
+                break;
+            }
+            const realKey = data.model.empty ? 'empty' : key;
+            if (data.model[realKey]) {
+                const { id, model, name } = data;
+                const { children } = model[realKey];
+                const newModel = {
+                    ...model,
+                    [key]: {
+                        attrs,
+                        children,
+                        parent,
+                        tagName,
+                    },
+                };
+                // if updating an empty node - modify parent, remove empty
+                if (realKey === 'empty') {
+                    const parentObj = newModel[parent];
+                    if (parentObj.children.find(item => item === 'empty')) {
+                        newModel[parent] = {
+                            ...parentObj,
+                            children: parentObj.children.map(item => item !== 'empty' ? item : key),
+                        };
+                    }
+                    delete newModel.empty;
+                }
                 newState = {
                     data: {
                         id,
-                        model: {
-                            ...model,
-                            [key]: {
-                                attrs,
-                                children,
-                                parent,
-                                tagName,
-                            },
-                        },
+                        model: newModel,
                         name,
                     },
                     error: null,

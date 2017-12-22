@@ -32,7 +32,7 @@ export const enum EDocumentAction {
     LOAD_START = 'DOCUMENT_LOAD_START',
     LOAD_SUCCESS = 'DOCUMENT_LOAD_SUCCESS',
     LOAD_ERROR = 'DOCUMENT_LOAD_ERROR',
-    ADD_EMPTY_CHILDREN = 'ADD_EMPTY_CHILDREN',
+    ADD_EMPTY_CHILD = 'ADD_EMPTY_CHILD',
     MOVE_NODE = 'MOVE_NODE',
     UPDATE_NODE = 'UPDATE_NODE',
     REMOVE_NODE = 'REMOVE_NODE',
@@ -42,7 +42,7 @@ export declare type TDocumentAction =
     IAction<EDocumentAction.LOAD_START, null>
     | IAction<EDocumentAction.LOAD_SUCCESS, TCompleteDocument>
     | IAction<EDocumentAction.LOAD_ERROR, IError>
-    | IAction<EDocumentAction.ADD_EMPTY_CHILDREN, string>
+    | IAction<EDocumentAction.ADD_EMPTY_CHILD, string>
     | IAction<EDocumentAction.MOVE_NODE, TMoveInfo>
     | IAction<EDocumentAction.UPDATE_NODE, TNodeInfo>
     | IAction<EDocumentAction.REMOVE_NODE, string>
