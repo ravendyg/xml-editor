@@ -2,7 +2,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 
 import { IActions } from 'client/actions';
-import { TNodeContextMenu } from 'client/types/dataTypes';
+import { NodeContextMenu } from 'client/components/NodeContextMenu';
 import { EModalTypes } from 'client/types/enums';
 import {
     EModal,
@@ -24,42 +24,6 @@ const hasAmongParent = (node: HTMLElement | null, attrName: string, attrRegexp: 
     } else {
         return false;
     }
-};
-
-interface INodeContextMenuProps {
-    actions: IActions;
-    menuInfo: TNodeContextMenu;
-}
-
-export const NodeContextMenu = (props: INodeContextMenuProps) => {
-    const { actions, menuInfo: { id, x, y } } = props;
-    const style = {
-        transform: `translate(${x}px, ${y}px)`,
-    };
-    const removeNode = () => {
-        actions.removeNode(id);
-        actions.hideAllModals();
-    };
-    const addChild = () => {
-        console.log('Add children to ' + id);
-        actions.hideAllModals();
-    };
-
-    return(
-        <ul
-            className="node-context-menu"
-            style={style}
-        >
-            <li
-                className="node-context-menu--item"
-                onClick={addChild}
-            >Add a child</li>
-            <li
-                className="node-context-menu--item"
-                onClick={removeNode}
-            >Remove</li>
-        </ul>
-    );
 };
 
 const mapModalInfoToComponents = (modals: EModal[], actions: IActions) => {
