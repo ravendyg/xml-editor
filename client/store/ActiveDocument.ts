@@ -1,5 +1,5 @@
 import {
-    EDocumentAction,
+    EDocumentActions,
     TDocumentAction,
 } from 'client/types/actions';
 import {
@@ -15,7 +15,7 @@ export const activeDocument = (
     let newState: IActiveDocument = state;
 
     switch (action.type) {
-        case EDocumentAction.LOAD_START: {
+        case EDocumentActions.LOAD_START: {
             newState = {
                 data: null,
                 error: null,
@@ -23,7 +23,7 @@ export const activeDocument = (
             };
             break;
         }
-        case EDocumentAction.LOAD_ERROR: {
+        case EDocumentActions.LOAD_ERROR: {
             newState = {
                 data: null,
                 error: action.payload,
@@ -31,7 +31,7 @@ export const activeDocument = (
             };
             break;
         }
-        case EDocumentAction.LOAD_SUCCESS: {
+        case EDocumentActions.LOAD_SUCCESS: {
             newState = {
                 data: action.payload,
                 error: null,
@@ -39,7 +39,7 @@ export const activeDocument = (
             };
             break;
         }
-        case EDocumentAction.ADD_EMPTY_CHILD: {
+        case EDocumentActions.ADD_EMPTY_CHILD: {
             const key = action.payload;
             const data = state.data;
             if (data && data.model[key]) {
@@ -71,7 +71,7 @@ export const activeDocument = (
             }
             break;
         }
-        case EDocumentAction.REMOVE_NODE: {
+        case EDocumentActions.REMOVE_NODE: {
             // remove node itself and a ref from the parent
             const key = action.payload;
             const data = state.data;
@@ -102,7 +102,7 @@ export const activeDocument = (
             }
             break;
         }
-        case EDocumentAction.MOVE_NODE: {
+        case EDocumentActions.MOVE_NODE: {
             const { direction, key } = action.payload;
             const data = state.data;
             if (data && data.model[key]) {
@@ -149,7 +149,7 @@ export const activeDocument = (
             }
             break;
         }
-        case EDocumentAction.UPDATE_NODE: {
+        case EDocumentActions.UPDATE_NODE: {
             const { key, attrs, tagName, parent } = action.payload;
             const { data } = state;
             if (!data) {

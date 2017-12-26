@@ -5,14 +5,14 @@ import {
     TAG_OFFSET,
     TAG_OFFSET_STEP,
 } from 'client/consts';
-import { KEY_CODES } from 'client/consts';
+// import { KEY_CODES } from 'client/consts';
 import {
-    TMaybeInput,
+    // TMaybeInput,
     TNode,
-    TNodeInfo,
+    // TNodeInfo,
 } from 'client/types/dataTypes';
 import { EMoveDirections } from 'client/types/enums';
-import { parseEditInput } from 'client/utils';
+// import { parseEditInput } from 'client/utils';
 
 /**
  * @prop {IActions} actions All actions
@@ -27,70 +27,14 @@ interface IProps {
     node: TNode;
 }
 
-/**
- * Attribute state
- *
- * @prop {boolean} beingEdited Is attribute being edited right now
- */
-interface IState {
-    beingEdited: boolean;
-}
-
-// TODO: There is logic duplication with <EmptyTag/> - do smth about it
-export class TagStart extends React.PureComponent<IProps, IState> {
-    private input: TMaybeInput;
+// TODO: remove move btns, replace with drag&drop
+export class TagStart extends React.PureComponent<IProps, {}> {
 
     constructor(props: IProps) {
         super(props);
         this.state = {
-            beingEdited: false,
+            editedNode: false,
         };
-    }
-
-    componentDidMount() {
-        setImmediate(this.focusOnInput);
-    }
-
-    /**
-     * Tag edit input lost focus
-     *
-     * @param {React.SyntheticEvent<HTMLInputElement>} event
-     */
-    handleBlur = (event: React.SyntheticEvent<HTMLInputElement>) => {
-        const text = (event.target as HTMLInputElement).value;
-        const { actions, id, node: { parent } } = this.props;
-        try {
-            const parsedInput = parseEditInput(text);
-            const nodeInfo: TNodeInfo = {
-                key: id,
-                ...parsedInput,
-                parent,
-            };
-            actions.updateNode(nodeInfo);
-            this.toggleBeingEdited();
-        } catch (e) {
-            // TODO: handle somehow and display to the user
-            throw e;
-        }
-    }
-
-    /**
-     * Tag edit input submit
-     *
-     * @param {React.KeyboardEvent<HTMLInputElement>} event
-     */
-    handleKeyUp = (event: React.KeyboardEvent<HTMLInputElement>) => {
-        switch (event.keyCode) {
-            case KEY_CODES.Enter: {
-                (event.target as HTMLInputElement).blur();
-                break;
-            }
-            case KEY_CODES.Esc: {
-                (event.target as HTMLInputElement).value = '';
-                (event.target as HTMLInputElement).blur();
-                break;
-            }
-        }
     }
 
     /**
@@ -131,24 +75,9 @@ export class TagStart extends React.PureComponent<IProps, IState> {
     /**
      * Toggle editor
      */
-    toggleBeingEdited = () => {
-        this.setState((prevState: IState) => ({
-            beingEdited: !prevState.beingEdited,
-        }));
-    }
-
-    /**
-     * Update reference
-     */
-    setInput = (ref: TMaybeInput) => this.input = ref;
-
-    /**
-     * Set focus on the input field (after it has been created)
-     */
-    focusOnInput = () => {
-        if (this.input) {
-            this.input.focus();
-        }
+    toggleeditedNode = () => {
+        const { actions, id } = this.props;
+        actions.editNode(id);
     }
 
     render() {
@@ -156,7 +85,6 @@ export class TagStart extends React.PureComponent<IProps, IState> {
             node: { attrs, children, tagName },
             level,
         } = this.props;
-        const { beingEdited } = this.state;
 
         // does not display 'document' as a separate entity
         if (tagName === 'document') {
@@ -180,36 +108,20 @@ export class TagStart extends React.PureComponent<IProps, IState> {
             ;
 
         let element;
-        if (beingEdited) {
-            setImmediate(this.focusOnInput);
-            text = tagName + text;
-            // matching input and it's content width would require to much of an effort
-            element = (
-                <input
-                    defaultValue={text}
-                    className={'tag-start--input'}
-                    onBlur={this.handleBlur}
-                    onKeyUp={this.handleKeyUp}
-                    ref={this.setInput}
-                    style={tagStyle}
-                />
-            );
-        } else {
-            const suffix =
-                (attrs.length ? ' ' : '')
-                + (children.length ? '>' : '/>')
-                ;
-            text = `<${tagName}${text}${suffix}`;
-            element = (
-                <span
-                    className={'tag-start--tag'}
-                    onDoubleClick={this.toggleBeingEdited}
-                    style={tagStyle}
-                >
-                    {text}
-                </span>
-            );
-        }
+        const suffix =
+            (attrs.length ? ' ' : '')
+            + (children.length ? '>' : '/>')
+            ;
+        text = `<${tagName}${text}${suffix}`;
+        element = (
+            <span
+                className={'tag-start--tag'}
+                onDoubleClick={this.toggleeditedNode}
+                style={tagStyle}
+            >
+                {text}
+            </span>
+        );
 
         return(
             <div className="tag-start" onContextMenu={this.handleContextMenu} title="Right click for more options">

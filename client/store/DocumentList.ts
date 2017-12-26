@@ -1,4 +1,7 @@
-import { EDocumentListAction, TDocumentListAction } from 'client/types/actions';
+import {
+    EDocumentListActions,
+    TDocumentListAction,
+} from 'client/types/actions';
 import { ELoadStatus } from 'client/types/enums';
 import { IDocumentList } from 'client/types/state';
 
@@ -9,7 +12,7 @@ export const documentList = (
     let newState: IDocumentList;
 
     switch (action.type) {
-        case EDocumentListAction.LOAD_START: {
+        case EDocumentListActions.LOAD_START: {
             newState = {
                 data: [],
                 error: null,
@@ -17,7 +20,7 @@ export const documentList = (
             };
             break;
         }
-        case EDocumentListAction.LOAD_ERROR: {
+        case EDocumentListActions.LOAD_ERROR: {
             newState = {
                 data: [],
                 error: action.payload,
@@ -25,7 +28,7 @@ export const documentList = (
             };
             break;
         }
-        case EDocumentListAction.LOAD_SUCCESS: {
+        case EDocumentListActions.LOAD_SUCCESS: {
             newState = {
                 data: action.payload,
                 error: null,

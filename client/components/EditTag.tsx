@@ -19,15 +19,18 @@ import {
 
 /**
  * @prop {IActions} actions All actions
+ * @prop {string} id Node identifier
  * @prop {number} level How deep it is situated in the tree
+ * @prop {TNode} node Node itself
  */
 interface IProps {
     actions: IActions;
+    id: string;
     level: number;
     node: TNode;
 }
 
-export class EmptyTag extends React.PureComponent<IProps, {}> {
+export class EditTag extends React.PureComponent<IProps, {}> {
     private input: TMaybeInput;
 
     componentDidMount() {
@@ -43,10 +46,11 @@ export class EmptyTag extends React.PureComponent<IProps, {}> {
      */
     handleBlur = (event: React.SyntheticEvent<HTMLInputElement>) => {
         const text = (event.target as HTMLInputElement).value;
-        const { actions, node: { parent } } = this.props;
-        const key = createNodeKey();
+        const { actions, id, node: { parent } } = this.props;
+        const key = (id && id !== 'empty') ? id : createNodeKey();
         const parsedInput = parseEditInput(text);
         const { tagName } = parsedInput;
+
         if (tagName) {
             const nodeInfo: TNodeInfo = {
                 key,
@@ -54,8 +58,10 @@ export class EmptyTag extends React.PureComponent<IProps, {}> {
                 parent,
             };
             actions.updateNode(nodeInfo);
-        } else {
+        } else if (id === 'empty') {
             actions.removeNode('empty');
+        } else {
+            actions.stopEditNode();
         }
     }
 
@@ -93,7 +99,10 @@ export class EmptyTag extends React.PureComponent<IProps, {}> {
     }
 
     render() {
-        const { level } = this.props;
+        const {
+            node: { attrs, tagName },
+            level
+        } = this.props;
 
         const offset = BTN_WIDTH + TAG_OFFSET + (level * TAG_OFFSET_STEP);
         const tagStyle = offset
@@ -101,9 +110,21 @@ export class EmptyTag extends React.PureComponent<IProps, {}> {
             : {}
             ;
 
+        let text = '';
+        attrs.forEach(
+            ({attrName, value}) => {
+                text += value
+                    ? ` ${attrName}="${value}"`
+                    : ` ${attrName} `
+                    ;
+            }
+        );
+        text = tagName + text;
+
         return(
             <div className="tag-start">
                 <input
+                    defaultValue={text.trim()}
                     className={'tag-start--input'}
                     onBlur={this.handleBlur}
                     onKeyUp={this.handleKeyUp}

@@ -16,36 +16,40 @@ export interface IAction<T, P> extends AnyAction {
     payload: P;
 }
 
-export const enum EDocumentListAction {
+export const enum EDocumentListActions {
     LOAD_START = 'DOCUMENT_LIST_LOAD_START',
     LOAD_SUCCESS = 'DOCUMENT_LIST_LOAD_SUCCESS',
     LOAD_ERROR = 'DOCUMENT_LIST_LOAD_ERROR',
 }
 
 export declare type TDocumentListAction =
-    IAction<EDocumentListAction.LOAD_START, null>
-    | IAction<EDocumentListAction.LOAD_SUCCESS, TDocumentInfo []>
-    | IAction<EDocumentListAction.LOAD_ERROR, IError>
+    IAction<EDocumentListActions.LOAD_START, null>
+    | IAction<EDocumentListActions.LOAD_SUCCESS, TDocumentInfo[]>
+    | IAction<EDocumentListActions.LOAD_ERROR, IError>
     ;
 
-export const enum EDocumentAction {
+export const enum EDocumentActions {
     LOAD_START = 'DOCUMENT_LOAD_START',
     LOAD_SUCCESS = 'DOCUMENT_LOAD_SUCCESS',
     LOAD_ERROR = 'DOCUMENT_LOAD_ERROR',
     ADD_EMPTY_CHILD = 'ADD_EMPTY_CHILD',
+    EDIT_EXISTING_NODE = 'EDIT_EXISTING_NODE',
+    STOP_EDITING = 'STOP_EDITING',
     MOVE_NODE = 'MOVE_NODE',
     UPDATE_NODE = 'UPDATE_NODE',
     REMOVE_NODE = 'REMOVE_NODE',
 }
 
 export declare type TDocumentAction =
-    IAction<EDocumentAction.LOAD_START, null>
-    | IAction<EDocumentAction.LOAD_SUCCESS, TCompleteDocument>
-    | IAction<EDocumentAction.LOAD_ERROR, IError>
-    | IAction<EDocumentAction.ADD_EMPTY_CHILD, string>
-    | IAction<EDocumentAction.MOVE_NODE, TMoveInfo>
-    | IAction<EDocumentAction.UPDATE_NODE, TNodeInfo>
-    | IAction<EDocumentAction.REMOVE_NODE, string>
+    IAction<EDocumentActions.LOAD_START, null>
+    | IAction<EDocumentActions.LOAD_SUCCESS, TCompleteDocument>
+    | IAction<EDocumentActions.LOAD_ERROR, IError>
+    | IAction<EDocumentActions.ADD_EMPTY_CHILD, string>
+    | IAction<EDocumentActions.STOP_EDITING, null>
+    | IAction<EDocumentActions.EDIT_EXISTING_NODE, string>
+    | IAction<EDocumentActions.MOVE_NODE, TMoveInfo>
+    | IAction<EDocumentActions.UPDATE_NODE, TNodeInfo>
+    | IAction<EDocumentActions.REMOVE_NODE, string>
     ;
 
 export const enum ECashDocuments {

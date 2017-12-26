@@ -1,7 +1,7 @@
 import {
     ECashDocuments,
-    EDocumentAction,
-    EDocumentListAction,
+    EDocumentActions,
+    EDocumentListActions,
     EModalsActions,
 } from 'client/types/actions';
 import {
@@ -14,7 +14,7 @@ import {
 import { IStore } from 'client/types/state';
 
 declare type TActionCreator<P> = (payload: P) => void;
-declare type TActionCreatorWithouArgs = () => void;
+declare type TActionCreatorWithoutArgs = () => void;
 
 // TODO: If there will be to many of them, split into separate action creators
 export interface IActionCreators {
@@ -24,17 +24,19 @@ export interface IActionCreators {
     confirmDocLoad: TActionCreator<TCompleteDocument | null>;
     confirmListLoad: TActionCreator<TDocumentInfo[]>;
     errorListLoad: TActionCreator<Error>;
-    startListLoad: TActionCreatorWithouArgs;
+    startListLoad: TActionCreatorWithoutArgs;
     // document
     addChild: TActionCreator<string>;
+    editNode: TActionCreator<string>;
     errorDocLoad: TActionCreator<Error>;
     moveNode: TActionCreator<TMoveInfo>;
     removeNode: TActionCreator<string>;
-    startDocLoad: TActionCreatorWithouArgs;
+    startDocLoad: TActionCreatorWithoutArgs;
+    stopNodeEditing: TActionCreatorWithoutArgs;
     updateNode: TActionCreator<TNodeInfo>;
     // modals
     showNodeContextMenu: TActionCreator<TNodeContextMenu>;
-    hideAllModals: TActionCreatorWithouArgs;
+    hideAllModals: TActionCreatorWithoutArgs;
 }
 
 export const createActionCreators = (store: IStore): IActionCreators => ({
@@ -45,44 +47,52 @@ export const createActionCreators = (store: IStore): IActionCreators => ({
 
     // list
     confirmDocLoad(payload: TCompleteDocument | null) {
-        store.dispatch({ type: EDocumentAction.LOAD_SUCCESS, payload });
+        store.dispatch({ type: EDocumentActions.LOAD_SUCCESS, payload });
     },
 
     confirmListLoad(payload: TDocumentInfo[]) {
-        store.dispatch({ type: EDocumentListAction.LOAD_SUCCESS, payload });
+        store.dispatch({ type: EDocumentListActions.LOAD_SUCCESS, payload });
     },
 
     errorListLoad(payload: Error) {
-        store.dispatch({ type: EDocumentListAction.LOAD_ERROR, payload });
+        store.dispatch({ type: EDocumentListActions.LOAD_ERROR, payload });
     },
 
     startListLoad() {
-        store.dispatch({ type: EDocumentListAction.LOAD_START, payload: null });
+        store.dispatch({ type: EDocumentListActions.LOAD_START, payload: null });
     },
 
     // document
     addChild(payload: string) {
-        store.dispatch({ type: EDocumentAction.ADD_EMPTY_CHILD, payload });
+        store.dispatch({ type: EDocumentActions.ADD_EMPTY_CHILD, payload });
+    },
+
+    editNode(payload: string) {
+        store.dispatch({ type: EDocumentActions.EDIT_EXISTING_NODE, payload });
     },
 
     errorDocLoad(payload: Error) {
-        store.dispatch({ type: EDocumentAction.LOAD_ERROR, payload });
+        store.dispatch({ type: EDocumentActions.LOAD_ERROR, payload });
     },
 
     moveNode(payload: TMoveInfo) {
-        store.dispatch({ type: EDocumentAction.MOVE_NODE, payload });
+        store.dispatch({ type: EDocumentActions.MOVE_NODE, payload });
     },
 
     removeNode(payload: string) {
-        store.dispatch({ type: EDocumentAction.REMOVE_NODE, payload });
+        store.dispatch({ type: EDocumentActions.REMOVE_NODE, payload });
     },
 
     startDocLoad() {
-        store.dispatch({ type: EDocumentAction.LOAD_START, payload: null });
+        store.dispatch({ type: EDocumentActions.LOAD_START, payload: null });
+    },
+
+    stopNodeEditing() {
+        store.dispatch({ type: EDocumentActions.STOP_EDITING, payload: null });
     },
 
     updateNode(payload: TNodeInfo) {
-        store.dispatch({ type: EDocumentAction.UPDATE_NODE, payload });
+        store.dispatch({ type: EDocumentActions.UPDATE_NODE, payload });
     },
 
     // modals

@@ -4,6 +4,7 @@ import { IStore } from 'client/types/state';
 import { activeDocument } from './ActiveDocument';
 import { cacheDocument } from './CashDocuments';
 import { documentList } from './DocumentList';
+import { editedNode } from './EditedNode';
 import { modals } from './Modals';
 
 const
@@ -12,6 +13,7 @@ const
         activeDocument,
         cacheDocument,
         documentList,
+        editedNode,
         modals,
     })
     ;
