@@ -21,6 +21,10 @@ export const NodeContextMenu = (props: INodeContextMenuProps) => {
         actions.addEmptyChild(id);
         actions.hideAllModals();
     };
+    const edit = () => {
+        actions.editNode(id);
+        actions.hideAllModals();
+    };
 
     return(
         <ul
@@ -31,6 +35,10 @@ export const NodeContextMenu = (props: INodeContextMenuProps) => {
                 className="node-context-menu--item"
                 onClick={addChild}
             >Add a child</li>
+            <li
+                className="node-context-menu--item"
+                onClick={edit}
+            >Edit</li>
             <li
                 className="node-context-menu--item"
                 onClick={removeNode}

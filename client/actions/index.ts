@@ -11,6 +11,7 @@ import { IStore } from 'client/types/state';
 
 export interface IActions {
     addEmptyChild: (nodeId: string) => void;
+    editNode: (nodeId: string) => void;
     loadDocumentList: () => void;
     hideAllModals: () => void;
     moveNode: (moveInfo: TMoveInfo) => void;
@@ -18,12 +19,17 @@ export interface IActions {
     selectDocument: (docId: string) => void;
     updateNode: (nodeInfo: TNodeInfo) => void;
     showNodeContextMenu: (nodeContect: TNodeContextMenu) => void;
+    stopEditNode: () => void;
 }
 
 export const createActions = (store: IStore, documentService: IDocumentService): IActions => {
     const actionCreators = createActionCreators(store);
 
     const addEmptyChild = actionCreators.addChild;
+
+    const editNode = (nodeId: string) => {
+        actionCreators.editNode(nodeId);
+    };
 
     const loadDocumentList = () => {
         actionCreators.startListLoad();
@@ -81,6 +87,10 @@ export const createActions = (store: IStore, documentService: IDocumentService):
         actionCreators.showNodeContextMenu(nodeContext);
     };
 
+    const stopEditNode = () => {
+        actionCreators.stopNodeEditing();
+    };
+
     const updateNode = (nodeInfo: TNodeInfo) => {
         const { key } = nodeInfo;
         if (key !== 'root') {
@@ -90,12 +100,14 @@ export const createActions = (store: IStore, documentService: IDocumentService):
 
     return {
         addEmptyChild,
+        editNode,
         loadDocumentList,
         hideAllModals,
         moveNode,
         removeNode,
         selectDocument,
         showNodeContextMenu,
+        stopEditNode,
         updateNode,
     };
 };

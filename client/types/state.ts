@@ -24,6 +24,7 @@ export interface IStore extends Store<IState> {}
  */
 export interface IState {
     activeDocument: IActiveDocument;
+    editedNode: string;
     cacheDocument: ICashDocument;
     documentList: IDocumentList;
     modals: EModal[];

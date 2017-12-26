@@ -2,7 +2,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 
 import { IActions } from 'client/actions';
-import { EmptyTag } from 'client/components/EmptyTag';
+import { EditTag } from 'client/components/EditTag';
 import { TagEnd } from 'client/components/TagEnd';
 import { TagStart } from 'client/components/TagStart';
 import {
@@ -23,27 +23,29 @@ interface IOwnProps {
 }
 
 /**
+ * @prop {boolean} beingEdited Is this node being edited
  * @prop {TNode} node
  */
 interface IProps extends IOwnProps {
+    beingEdited: boolean;
     node: TNode | undefined;
 }
 
 export const Node = (props: IProps): JSX.Element | null => {
-    const { actions, id, level, node } = props;
+    const { actions, beingEdited, id, level, node } = props;
     if (!node) {
         return null;
-    } else if (id === 'empty') {
+    } else if (beingEdited) {
         return(
-            <EmptyTag
+            <EditTag
                 actions={actions}
+                id={id}
                 level={level}
                 node={node}
             />
         );
     } else {
         const { children } = node;
-        // TODO: If node has no children use /> for closing
         return(
             <div>
                 <TagStart
@@ -71,11 +73,13 @@ export const Node = (props: IProps): JSX.Element | null => {
 const mapStateToProps = (state: IState, props: IOwnProps): IProps => {
     const
         data = state.activeDocument.data as TCompleteDocument,  // null has been handled before
+        editedNode = state.editedNode,
         node = data.model[props.id]
         ;
 
     return {
         ...props,
+        beingEdited: props.id === editedNode,
         node,
     };
 };
