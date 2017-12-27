@@ -55,6 +55,11 @@ export declare type TNodeInfo = {
 };
 
 /**
+ * Complete model
+ */
+export declare type TModel = { [key: string]: TNode };
+
+/**
  * Complete document
  *
  * @prop {string} id Unique identifier
@@ -63,9 +68,7 @@ export declare type TNodeInfo = {
 export declare type TCompleteDocument = {
     id: string;
     name: string;
-    model: {
-        [key: string]: TNode;
-    };
+    model: TModel;
 };
 
 /**

@@ -5,60 +5,68 @@ import {
     TAG_OFFSET,
     TAG_OFFSET_STEP,
 } from 'client/consts';
-// import { KEY_CODES } from 'client/consts';
 import {
-    // TMaybeInput,
+    TModel,
     TNode,
-    // TNodeInfo,
 } from 'client/types/dataTypes';
-import { EMoveDirections } from 'client/types/enums';
-// import { parseEditInput } from 'client/utils';
+
+/**
+ * Check whether the node is not a child of another one
+ *
+ * @param model
+ * @param nodeId
+ */
+const isSuccessor = (model: TModel, nodeId: string, targetId: string): boolean => {
+
+};
 
 /**
  * @prop {IActions} actions All actions
+ * @prop {string} draggedElement An id of the element being dragged
  * @prop {string} id Node identifier
  * @prop {number} level How deep it is situated in the tree
+ * @prop {TModel} model Complete model, need for checks that the node is not being dragged inside itself
  * @prop {TNode} node
  */
 interface IProps {
     actions: IActions;
+    draggedElement: string;
     id: string;
     level: number;
+    model: TModel;
     node: TNode;
 }
 
+/**
+ * Hover states
+ * @prop {number} NONE No hover
+ * @prop {number} TOP Over the top half
+ * @prop {number} BOTTOM Over the bottom half
+ */
+const enum EHoverMode {
+    NONE = 1,
+    TOP = 2,
+    BOTTOM = 3,
+}
+
+/**
+ * @prop {EHoverMode} hover
+ */
+interface IState {
+    hover: EHoverMode;
+}
+
 // TODO: remove move btns, replace with drag&drop
-export class TagStart extends React.PureComponent<IProps, {}> {
+export class TagStart extends React.PureComponent<IProps, IState> {
+
+    private ref: HTMLElement | null;
 
     constructor(props: IProps) {
         super(props);
         this.state = {
-            editedNode: false,
+            hover: EHoverMode.NONE,
         };
     }
-
-    /**
-     * Move this node
-     *
-     * @param {EMoveDirections} direction
-     */
-    moveNode = (direction: EMoveDirections) => {
-        const { actions: { moveNode }, id } = this.props;
-        moveNode({
-            key: id,
-            direction,
-        });
-    }
-
-    /**
-     * Move this node up
-     */
-    handleMoveUp = () => this.moveNode(EMoveDirections.UP);
-
-    /**
-     * Move this node down
-     */
-    handleMoveDown = () => this.moveNode(EMoveDirections.DOWN);
 
     /**
      * Handle right click on the node start tag
@@ -73,11 +81,79 @@ export class TagStart extends React.PureComponent<IProps, {}> {
     }
 
     /**
+     * Handle drag over
+     *
+     * @param {React.SyntheticEvent<any>} event
+     */
+    handleDragOver = (event: React.SyntheticEvent<any>) => {
+        const { ref } = this;
+        const { hover } = this.state;
+        const { draggedElement, id } = this.props;
+
+        // don't show borders when dragging over itself
+        if (draggedElement === id) {
+            return;
+        }
+
+        if (ref) {
+            const nativeEvent = event.nativeEvent as DragEvent;
+            const {layerY} = nativeEvent;
+            const height = ref.offsetHeight;
+
+            if (layerY / height < 0.5) {
+                if (hover !== EHoverMode.TOP) {
+                    this.setState({
+                        hover: EHoverMode.TOP,
+                    });
+                }
+            } else {
+                if (hover !== EHoverMode.BOTTOM) {
+                    this.setState({
+                        hover: EHoverMode.BOTTOM,
+                    });
+                }
+            }
+        }
+    }
+
+    /**
+     * Handle drag leaving the element
+     */
+    handleDragLeave = () => {
+        this.setState({
+            hover: EHoverMode.NONE,
+        });
+    }
+
+    /**
+     * Handle drag start
+     */
+    handleDragStart = () => {
+        const { actions: { startDrag }, id } = this.props;
+        startDrag(id);
+    }
+
+    /**
+     * Handle drag stop
+     */
+    handleDragStop = () => {
+        const { actions: { stopDrag } } = this.props;
+        stopDrag();
+    }
+
+    /**
      * Toggle editor
      */
     toggleeditedNode = () => {
         const { actions, id } = this.props;
         actions.editNode(id);
+    }
+
+    /**
+     * Ref the wrapper
+     */
+    getWrapperRef = (ref: HTMLElement | null) => {
+        this.ref = ref;
     }
 
     render() {
@@ -116,25 +192,33 @@ export class TagStart extends React.PureComponent<IProps, {}> {
         element = (
             <span
                 className={'tag-start--tag'}
-                onDoubleClick={this.toggleeditedNode}
                 style={tagStyle}
             >
                 {text}
             </span>
         );
 
+        const { hover } = this.state;
+        let className = 'tag-start';
+        if (hover === EHoverMode.BOTTOM) {
+            className += ' hover-bottom';
+        } else if (hover === EHoverMode.TOP) {
+            className += ' hover-top';
+        }
+
         return(
-            <div className="tag-start" onContextMenu={this.handleContextMenu} title="Right click for more options">
-                <span className="tag-start--btns">
-                    <button
-                        onClick={this.handleMoveUp}
-                        title="Move node up"
-                    >▲</button>
-                    <button
-                        onClick={this.handleMoveDown}
-                        title="Move node down"
-                    >▼</button>
-                </span>
+            <div
+                className={className}
+                draggable
+                onContextMenu={this.handleContextMenu}
+                onDoubleClick={this.toggleeditedNode}
+                onDragStart={this.handleDragStart}
+                onDragEnd={this.handleDragStop}
+                onDragLeave={this.handleDragLeave}
+                onDragOver={this.handleDragOver}
+                ref={this.getWrapperRef}
+                title="Right click for more options"
+            >
                 {element}
             </div>
         );

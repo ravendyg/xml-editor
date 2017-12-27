@@ -71,3 +71,13 @@ export declare type TModalsAction =
     IAction<EModalsActions.HIDE_ALL_MODALS, null>
     | IAction<EModalsActions.SHOW_NODE_CONTEXT_MENU, TNodeContextMenu>
     ;
+
+export const enum EDragActions {
+    START_DRAG = 'START_DRAG',
+    STOP_DRAG = 'STOP_DRAG',
+}
+
+export declare type TDragAction =
+    IAction<EDragActions.START_DRAG, string>
+    | IAction<EDragActions.STOP_DRAG, null>
+    ;

@@ -7,6 +7,7 @@ import { TagEnd } from 'client/components/TagEnd';
 import { TagStart } from 'client/components/TagStart';
 import {
     TCompleteDocument,
+    TModel,
     TNode,
 } from 'client/types/dataTypes';
 import { IState } from 'client/types/state';
@@ -24,15 +25,19 @@ interface IOwnProps {
 
 /**
  * @prop {boolean} beingEdited Is this node being edited
+ * @prop {string} draggedElement Dragged elemetn id
+ * @prop {TModel} model Complete model
  * @prop {TNode} node
  */
 interface IProps extends IOwnProps {
     beingEdited: boolean;
+    draggedElement: string;
+    model: TModel;
     node: TNode | undefined;
 }
 
 export const Node = (props: IProps): JSX.Element | null => {
-    const { actions, beingEdited, id, level, node } = props;
+    const { actions, beingEdited, model, draggedElement, id, level, node } = props;
     if (!node) {
         return null;
     } else if (beingEdited) {
@@ -50,8 +55,10 @@ export const Node = (props: IProps): JSX.Element | null => {
             <div>
                 <TagStart
                     actions={actions}
+                    draggedElement={draggedElement}
                     id={id}
                     level={level}
+                    model={model}
                     node={node}
                 />
                 {children.map((id, index) =>
@@ -73,6 +80,7 @@ export const Node = (props: IProps): JSX.Element | null => {
 const mapStateToProps = (state: IState, props: IOwnProps): IProps => {
     const
         data = state.activeDocument.data as TCompleteDocument,  // null has been handled before
+        draggedElement = state.drag,
         editedNode = state.editedNode,
         node = data.model[props.id]
         ;
@@ -80,6 +88,8 @@ const mapStateToProps = (state: IState, props: IOwnProps): IProps => {
     return {
         ...props,
         beingEdited: props.id === editedNode,
+        draggedElement,
+        model: data.model,
         node,
     };
 };

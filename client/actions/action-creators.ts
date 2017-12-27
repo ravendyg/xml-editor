@@ -2,6 +2,7 @@ import {
     ECashDocuments,
     EDocumentActions,
     EDocumentListActions,
+    EDragActions,
     EModalsActions,
 } from 'client/types/actions';
 import {
@@ -37,6 +38,9 @@ export interface IActionCreators {
     // modals
     showNodeContextMenu: TActionCreator<TNodeContextMenu>;
     hideAllModals: TActionCreatorWithoutArgs;
+    // drag
+    startDrag: TActionCreator<string>;
+    stopDrag: TActionCreatorWithoutArgs;
 }
 
 export const createActionCreators = (store: IStore): IActionCreators => ({
@@ -103,4 +107,14 @@ export const createActionCreators = (store: IStore): IActionCreators => ({
     hideAllModals() {
         store.dispatch({ type: EModalsActions.HIDE_ALL_MODALS, payload: null });
     },
+
+    // drag
+    startDrag(payload: string) {
+        store.dispatch({ type: EDragActions.START_DRAG, payload });
+    },
+
+    stopDrag() {
+        store.dispatch({ type: EDragActions.STOP_DRAG, payload: null });
+    },
+
 });

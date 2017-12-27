@@ -19,6 +19,8 @@ export interface IActions {
     selectDocument: (docId: string) => void;
     updateNode: (nodeInfo: TNodeInfo) => void;
     showNodeContextMenu: (nodeContect: TNodeContextMenu) => void;
+    startDrag: (nodeId: string) => void;
+    stopDrag: () => void;
     stopEditNode: () => void;
 }
 
@@ -98,6 +100,14 @@ export const createActions = (store: IStore, documentService: IDocumentService):
         }
     };
 
+    const startDrag = (nodeId: string) => {
+        actionCreators.startDrag(nodeId);
+    };
+
+    const stopDrag = () => {
+        actionCreators.stopDrag();
+    };
+
     return {
         addEmptyChild,
         editNode,
@@ -109,5 +119,7 @@ export const createActions = (store: IStore, documentService: IDocumentService):
         showNodeContextMenu,
         stopEditNode,
         updateNode,
+        startDrag,
+        stopDrag,
     };
 };
