@@ -11,16 +11,6 @@ import {
 } from 'client/types/dataTypes';
 
 /**
- * Check whether the node is not a child of another one
- *
- * @param model
- * @param nodeId
- */
-const isSuccessor = (model: TModel, nodeId: string, targetId: string): boolean => {
-
-};
-
-/**
  * @prop {IActions} actions All actions
  * @prop {string} draggedElement An id of the element being dragged
  * @prop {string} id Node identifier
@@ -38,33 +28,19 @@ interface IProps {
 }
 
 /**
- * Hover states
- * @prop {number} NONE No hover
- * @prop {number} TOP Over the top half
- * @prop {number} BOTTOM Over the bottom half
- */
-const enum EHoverMode {
-    NONE = 1,
-    TOP = 2,
-    BOTTOM = 3,
-}
-
-/**
  * @prop {EHoverMode} hover
  */
 interface IState {
-    hover: EHoverMode;
+    hovered: boolean;
 }
 
 // TODO: remove move btns, replace with drag&drop
 export class TagStart extends React.PureComponent<IProps, IState> {
 
-    private ref: HTMLElement | null;
-
     constructor(props: IProps) {
         super(props);
         this.state = {
-            hover: EHoverMode.NONE,
+            hovered: false,
         };
     }
 
@@ -80,48 +56,15 @@ export class TagStart extends React.PureComponent<IProps, IState> {
         showNodeContextMenu({id, x: clientX, y: clientY});
     }
 
-    /**
-     * Handle drag over
-     *
-     * @param {React.SyntheticEvent<any>} event
-     */
-    handleDragOver = (event: React.SyntheticEvent<any>) => {
-        const { ref } = this;
-        const { hover } = this.state;
-        const { draggedElement, id } = this.props;
-
-        // don't show borders when dragging over itself
-        if (draggedElement === id) {
-            return;
-        }
-
-        if (ref) {
-            const nativeEvent = event.nativeEvent as DragEvent;
-            const {layerY} = nativeEvent;
-            const height = ref.offsetHeight;
-
-            if (layerY / height < 0.5) {
-                if (hover !== EHoverMode.TOP) {
-                    this.setState({
-                        hover: EHoverMode.TOP,
-                    });
-                }
-            } else {
-                if (hover !== EHoverMode.BOTTOM) {
-                    this.setState({
-                        hover: EHoverMode.BOTTOM,
-                    });
-                }
-            }
-        }
+    handleDragEnter = () => {
+        this.setState({
+            hovered: true,
+        });
     }
 
-    /**
-     * Handle drag leaving the element
-     */
     handleDragLeave = () => {
         this.setState({
-            hover: EHoverMode.NONE,
+            hovered: false,
         });
     }
 
@@ -134,14 +77,6 @@ export class TagStart extends React.PureComponent<IProps, IState> {
     }
 
     /**
-     * Handle drag stop
-     */
-    handleDragStop = () => {
-        const { actions: { stopDrag } } = this.props;
-        stopDrag();
-    }
-
-    /**
      * Toggle editor
      */
     toggleeditedNode = () => {
@@ -149,18 +84,12 @@ export class TagStart extends React.PureComponent<IProps, IState> {
         actions.editNode(id);
     }
 
-    /**
-     * Ref the wrapper
-     */
-    getWrapperRef = (ref: HTMLElement | null) => {
-        this.ref = ref;
-    }
-
     render() {
         const {
             node: { attrs, children, tagName },
             level,
         } = this.props;
+        const { hovered } = this.state;
 
         // does not display 'document' as a separate entity
         if (tagName === 'document') {
@@ -198,13 +127,9 @@ export class TagStart extends React.PureComponent<IProps, IState> {
             </span>
         );
 
-        const { hover } = this.state;
-        let className = 'tag-start';
-        if (hover === EHoverMode.BOTTOM) {
-            className += ' hover-bottom';
-        } else if (hover === EHoverMode.TOP) {
-            className += ' hover-top';
-        }
+        const className = 'tag-start' +
+            (hovered && children.length === 0 ? ' hovered' : '')
+            ;
 
         return(
             <div
@@ -212,11 +137,9 @@ export class TagStart extends React.PureComponent<IProps, IState> {
                 draggable
                 onContextMenu={this.handleContextMenu}
                 onDoubleClick={this.toggleeditedNode}
-                onDragStart={this.handleDragStart}
-                onDragEnd={this.handleDragStop}
+                onDragEnter={this.handleDragEnter}
                 onDragLeave={this.handleDragLeave}
-                onDragOver={this.handleDragOver}
-                ref={this.getWrapperRef}
+                onDragStart={this.handleDragStart}
                 title="Right click for more options"
             >
                 {element}

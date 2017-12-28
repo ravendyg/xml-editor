@@ -11,8 +11,11 @@ body {
     }
 }
 
+.view-wrapper {
+    padding-top: 10px;
+}
+
 .tag-start, .tag-end {
-    padding: 5px 0 0 0;
     position: relative;
 }
 
@@ -22,13 +25,22 @@ body {
     }
 }
 
-.tag-start.hover-top {
-    margin: 2px 0 0 0;
-    border-top: 2px solid gray;
+.tag-start.hovered {
+    background-color: rgba(0, 0, 0, 0.2);
 }
-.tag-start.hover-bottom {
-    margin: 0 0 2px 0;
-    border-bottom: 2px solid gray;
+
+.separator--wrapper {
+    height: 6px;
+}
+
+.separator--line {
+    height: 2px;
+    margin: 2px 0;
+    pointer-events: none;
+}
+
+.separator--line.active {
+    background-color: gray;
 }
 
 .modals-container {

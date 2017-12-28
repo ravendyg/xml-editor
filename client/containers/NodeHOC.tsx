@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 
 import { IActions } from 'client/actions';
 import { EditTag } from 'client/components/EditTag';
+import { Separator } from 'client/components/Separator';
 import { TagEnd } from 'client/components/TagEnd';
 import { TagStart } from 'client/components/TagStart';
 import {
@@ -53,6 +54,14 @@ export const Node = (props: IProps): JSX.Element | null => {
         const { children } = node;
         return(
             <div>
+                {id !== 'root' && (
+                    <Separator
+                        actions={actions}
+                        draggedElement={draggedElement}
+                        id={id}
+                        model={model}
+                    />
+                )}
                 <TagStart
                     actions={actions}
                     draggedElement={draggedElement}
@@ -69,6 +78,17 @@ export const Node = (props: IProps): JSX.Element | null => {
                         level={level + 1}
                     />
                 )}
+                {children.length ?
+                    (
+                        <Separator
+                            actions={actions}
+                            draggedElement={draggedElement}
+                            id={id}
+                            model={model} tail
+                        />
+                    )
+                    : null
+                }
                 {children.length ? <TagEnd node={node} level={level}/> : null}
             </div>
         );
