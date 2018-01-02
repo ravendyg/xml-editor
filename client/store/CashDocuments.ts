@@ -3,12 +3,13 @@ import {
     TCashDocumentsAction,
 } from 'client/types/actions';
 import { ICashDocument } from 'client/types/state';
+import { assertNever } from 'client/utils/assertNever';
 
 export const cacheDocument = (
     state: ICashDocument = getDefaultTCompleteDocuments(),
     action: TCashDocumentsAction,
 ): ICashDocument => {
-    let newState: ICashDocument;
+    let newState = state;
 
     switch (action.type) {
         case ECashDocuments.ADD_DOCUMENT: {
@@ -27,7 +28,7 @@ export const cacheDocument = (
             break;
         }
         default: {
-            return state;
+            assertNever(action);
         }
     }
 

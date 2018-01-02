@@ -2,12 +2,13 @@ import {
     EDragActions,
     TDragAction,
 } from 'client/types/actions';
+import { assertNever } from 'client/utils/assertNever';
 
 export const drag = (
     state: string = '',
     action: TDragAction,
 ): string => {
-    let newState: string;
+    let newState = state;
 
     switch (action.type) {
         case EDragActions.START_DRAG: {
@@ -19,7 +20,7 @@ export const drag = (
             break;
         }
         default: {
-            return state;
+            assertNever(action);
         }
     }
 

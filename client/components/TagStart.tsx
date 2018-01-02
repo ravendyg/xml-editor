@@ -9,7 +9,7 @@ import {
     TModel,
     TNode,
 } from 'client/types/dataTypes';
-import { searchInSubtree } from 'client/utils';
+import { searchInSubtree } from 'client/utils/searchInSubtree';
 
 /**
  * @prop {IActions} actions All actions

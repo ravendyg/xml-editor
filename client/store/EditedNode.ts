@@ -2,6 +2,7 @@ import {
     EDocumentActions,
     TDocumentAction,
 } from 'client/types/actions';
+import { assertNever } from 'client/utils/assertNever';
 
 export const editedNode = (
     state: string = '',
@@ -23,8 +24,16 @@ export const editedNode = (
             newState = '';
             break;
         }
+        case EDocumentActions.MOVE_NODE_BEFORE:
+        case EDocumentActions.MOVE_NODE_TO_END:
+        case EDocumentActions.REMOVE_NODE:
+        case EDocumentActions.LOAD_START:
+        case EDocumentActions.LOAD_SUCCESS:
+        case EDocumentActions.LOAD_ERROR: {
+            break;
+        }
         default: {
-            return state;
+            assertNever(action);
         }
     }
 
