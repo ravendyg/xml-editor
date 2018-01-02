@@ -5,26 +5,20 @@ import {
     TAG_OFFSET,
     TAG_OFFSET_STEP,
 } from 'client/consts';
-import {
-    TModel,
-    TNode,
-} from 'client/types/dataTypes';
-import { searchInSubtree } from 'client/utils/searchInSubtree';
+import { TNode } from 'client/types/dataTypes';
 
 /**
  * @prop {IActions} actions All actions
- * @prop {string} draggedElement An id of the element being dragged
+ * @prop {boolean} droppable Can the dragged element be droppped here
  * @prop {string} id Node identifier
  * @prop {number} level How deep it is situated in the tree
- * @prop {TModel} model Complete model, need for checks that the node is not being dragged inside itself
  * @prop {TNode} node
  */
 interface IProps {
     actions: IActions;
-    draggedElement: string;
+    droppable: boolean;
     id: string;
     level: number;
-    model: TModel;
     node: TNode;
 }
 
@@ -58,15 +52,20 @@ export class TagStart extends React.PureComponent<IProps, IState> {
     }
 
     handleDragEnter = () => {
-        this.setState({
-            hovered: true,
-        });
+        const { droppable, node: { children } } = this.props;
+        if (droppable && children.length === 0) {
+            this.setState({
+                hovered: true,
+            });
+        }
     }
 
     handleDragLeave = () => {
-        this.setState({
-            hovered: false,
-        });
+        if (this.state.hovered) {
+            this.setState({
+                hovered: false,
+            });
+        }
     }
 
     /**
@@ -82,7 +81,10 @@ export class TagStart extends React.PureComponent<IProps, IState> {
      */
     handleDragover = (e: React.SyntheticEvent<any>) => {
         const { nativeEvent } = e;
-        nativeEvent.preventDefault();
+        const { droppable } = this.props;
+        if (droppable) {
+            nativeEvent.preventDefault();
+        }
     }
 
     /**
@@ -90,11 +92,13 @@ export class TagStart extends React.PureComponent<IProps, IState> {
      */
     handleDrop = () => {
         const {
-            actions: { moveNodeToEnd, },
+            actions: { moveNodeToEnd },
             id,
-            draggedElement,
+            droppable,
         } = this.props;
-        moveNodeToEnd({ key: draggedElement, target: id, });
+        if (droppable) {
+            moveNodeToEnd(id);
+        }
     }
 
     /**
@@ -107,13 +111,9 @@ export class TagStart extends React.PureComponent<IProps, IState> {
 
     render() {
         const {
-            draggedElement,
-            id,
             level,
-            model,
             node: { attrs, children, tagName },
         } = this.props;
-        const { hovered } = this.state;
 
         // does not display 'document' as a separate entity
         if (tagName === 'document') {
@@ -153,13 +153,8 @@ export class TagStart extends React.PureComponent<IProps, IState> {
             </span>
         );
 
-        const className = 'tag-start' +
-            (hovered
-                && children.length === 0
-                && !searchInSubtree(model, id, draggedElement)
-                    ? ' hovered'
-                    : ''
-            )
+        const className = 'tag-start'
+            + (this.state.hovered ? ' hovered' : '')
             ;
 
         return(

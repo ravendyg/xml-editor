@@ -1,21 +1,17 @@
 import * as React from 'react';
 
 import { IActions } from 'client/actions';
-import { TModel } from 'client/types/dataTypes';
-import { searchInSubtree } from 'client/utils/searchInSubtree';
 
 /**
  * @prop {IActions} actions All actions connected to redux
  * @prop {string} id Node separator goes before (or in the end of the children list if tail provided)
- * @prop {string} draggedElement Id of the element being dragged
- * @prop {TModel} model Complete model, need for checks that the node is not being dragged inside itself
+ * @prop {boolean} droppable Can the dragged element be dropped here
  * @prop {boolean} [tail] Has separator been placed in the end of the children list
  */
 interface IProps {
     actions: IActions;
     id: string;
-    draggedElement: string;
-    model: TModel;
+    droppable: boolean;
     tail?: boolean;
 }
 
@@ -36,15 +32,20 @@ export class Separator extends React.Component<IProps, IState> {
     }
 
     handleDragEnter = () => {
-        this.setState({
-            hovered: true,
-        });
+        const { droppable } = this.props;
+        if (droppable) {
+            this.setState({
+                hovered: true,
+            });
+        }
     }
 
     handleDragLeave = () => {
-        this.setState({
-            hovered: false,
-        });
+        if (this.state.hovered) {
+            this.setState({
+                hovered: false,
+            });
+        }
     }
 
     /**
@@ -52,7 +53,10 @@ export class Separator extends React.Component<IProps, IState> {
      */
     handleDragover = (e: React.SyntheticEvent<any>) => {
         const { nativeEvent } = e;
-        nativeEvent.preventDefault();
+        const { droppable } = this.props;
+        if (droppable) {
+            nativeEvent.preventDefault();
+        }
     }
 
     handleDrop = () => {
@@ -62,24 +66,20 @@ export class Separator extends React.Component<IProps, IState> {
                 moveNodeToEnd,
             },
             id,
-            draggedElement,
+            droppable,
             tail = false,
         } = this.props;
-        const moveAction = tail ? moveNodeToEnd : moveNodeBefore;
-        moveAction({ key: draggedElement, target: id, });
+        if (droppable) {
+            const moveAction = tail ? moveNodeToEnd : moveNodeBefore;
+            moveAction(id);
+        }
     }
 
     render() {
-        const { hovered } = this.state;
-        let className = 'separator--line';
-        if (hovered) {
-            // this way it won't traverse the nodes tree when it's not necessary
-            // it lags quite a lot, but not sure how to fix it yet
-            // maybe calculate classes on drag start?
-            const { draggedElement, id, model } = this.props;
-            const isInSubtree = searchInSubtree(model, id, draggedElement);
-            className += !isInSubtree ? ' active' : ' inactive';
-        }
+        const className = 'separator--line'
+            + (this.state.hovered ? ' hovered' : '')
+            ;
+
         return(
             <div
                 className="separator--wrapper"

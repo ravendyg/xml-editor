@@ -1,7 +1,6 @@
 import { createActionCreators } from 'client/actions/action-creators';
 import {
     TCompleteDocument,
-    TMoveInfo,
     TNodeContextMenu,
     TNodeInfo,
 } from 'client/types/dataTypes';
@@ -14,8 +13,8 @@ export interface IActions {
     editNode: (nodeId: string) => void;
     loadDocumentList: () => void;
     hideAllModals: () => void;
-    moveNodeToEnd: (moveInfo: TMoveInfo) => void;
-    moveNodeBefore: (moveInfo: TMoveInfo) => void;
+    moveNodeToEnd: (target: string) => void;
+    moveNodeBefore: (target: string) => void;
     removeNode: (nodeId: string) => void;
     selectDocument: (docId: string) => void;
     updateNode: (nodeInfo: TNodeInfo) => void;
@@ -50,18 +49,18 @@ export const createActions = (store: IStore, documentService: IDocumentService):
 
     const hideAllModals = actionCreators.hideAllModals;
 
-    const moveNodeToEnd = (moveInfo: TMoveInfo) => {
-        const { key } = moveInfo;
+    const moveNodeToEnd = (target: string) => {
+        const key = store.getState().drag;
         if (key !== 'root') {
-            actionCreators.moveNodeToEnd(moveInfo);
+            actionCreators.moveNodeToEnd({ key, target, });
         }
         actionCreators.stopDrag();
     };
 
-    const moveNodeBefore = (moveInfo: TMoveInfo) => {
-        const { key, target } = moveInfo;
+    const moveNodeBefore = (target: string) => {
+        const key = store.getState().drag;
         if (key !== 'root' && target !== 'root') {
-            actionCreators.moveNodeBefore(moveInfo);
+            actionCreators.moveNodeBefore({ key, target, });
         }
         actionCreators.stopDrag();
     };
