@@ -12,6 +12,7 @@ import {
     TNode,
 } from 'client/types/dataTypes';
 import { IState } from 'client/types/state';
+import { searchInSubtree } from 'client/utils/searchInSubtree';
 
 /**
  * @prop {IActions} actions All actions connected to redux
@@ -52,22 +53,22 @@ export const Node = (props: IProps): JSX.Element | null => {
         );
     } else {
         const { children } = node;
+        const droppable = draggedElement.length > 0 && !searchInSubtree(model, id, draggedElement);
+
         return(
             <div>
                 {id !== 'root' && (
                     <Separator
                         actions={actions}
-                        draggedElement={draggedElement}
+                        droppable={droppable}
                         id={id}
-                        model={model}
                     />
                 )}
                 <TagStart
                     actions={actions}
-                    draggedElement={draggedElement}
+                    droppable={droppable}
                     id={id}
                     level={level}
-                    model={model}
                     node={node}
                 />
                 {children.map((id, index) =>
@@ -82,9 +83,8 @@ export const Node = (props: IProps): JSX.Element | null => {
                     (
                         <Separator
                             actions={actions}
-                            draggedElement={draggedElement}
+                            droppable={droppable}
                             id={id}
-                            model={model}
                             tail
                         />
                     )

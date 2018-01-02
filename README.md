@@ -1,11 +1,13 @@
 ## XML editor
 
-Just a proof of concept - means a complete disorganized mess.
+Just a proof of concept - means a completely disorganized mess.
 
 
 
 ### TODO
-* Fix redrawing after the drop;
-* Calculate &hover classes on drag start and stop rerendering everything;
 * Add "edit" field onto node context menu;
-* Add tests, if there is some time.
+* Add more tests, if there is some time.
+
+
+### Bugs
+* The line separating the header and the body partially disappears after a drag&drop. Can't figure out the reason.
