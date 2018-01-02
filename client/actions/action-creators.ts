@@ -85,7 +85,7 @@ export const createActionCreators = (store: IStore): IActionCreators => ({
     },
 
     moveNodeBefore(payload: TMoveInfo) {
-        store.dispatch({ type: EDocumentActions.MOVE_NODE_TO_END_BEFORE, payload });
+        store.dispatch({ type: EDocumentActions.MOVE_NODE_BEFORE, payload });
     },
 
     removeNode(payload: string) {
