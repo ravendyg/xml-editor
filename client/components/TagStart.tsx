@@ -9,6 +9,7 @@ import {
     TModel,
     TNode,
 } from 'client/types/dataTypes';
+import { searchInSubtree } from 'client/utils';
 
 /**
  * @prop {IActions} actions All actions
@@ -77,6 +78,23 @@ export class TagStart extends React.PureComponent<IProps, IState> {
     }
 
     /**
+     * Handle drag over, otherwise drop won't fire
+     */
+    handleDragover = (e: React.SyntheticEvent<any>) => {
+        const { nativeEvent } = e;
+        nativeEvent.preventDefault();
+    }
+
+    handleDrop = (e: React.SyntheticEvent<any>) => {
+        console.log(e.nativeEvent)
+        const {
+            id,
+            draggedElement,
+        } = this.props;
+        console.log(id, draggedElement);
+    }
+
+    /**
      * Toggle editor
      */
     toggleeditedNode = () => {
@@ -86,8 +104,11 @@ export class TagStart extends React.PureComponent<IProps, IState> {
 
     render() {
         const {
-            node: { attrs, children, tagName },
+            draggedElement,
+            id,
             level,
+            model,
+            node: { attrs, children, tagName },
         } = this.props;
         const { hovered } = this.state;
 
@@ -122,13 +143,20 @@ export class TagStart extends React.PureComponent<IProps, IState> {
             <span
                 className={'tag-start--tag'}
                 style={tagStyle}
+                onDrop={console.log}
+                onDropCapture={console.log}
             >
                 {text}
             </span>
         );
 
         const className = 'tag-start' +
-            (hovered && children.length === 0 ? ' hovered' : '')
+            (hovered
+                && children.length === 0
+                && !searchInSubtree(model, id, draggedElement)
+                    ? ' hovered'
+                    : ''
+            )
             ;
 
         return(
@@ -140,6 +168,8 @@ export class TagStart extends React.PureComponent<IProps, IState> {
                 onDragEnter={this.handleDragEnter}
                 onDragLeave={this.handleDragLeave}
                 onDragStart={this.handleDragStart}
+                onDragOver={this.handleDragover}
+                onDrop={this.handleDrop}
                 title="Right click for more options"
             >
                 {element}

@@ -30,12 +30,13 @@ body {
 }
 
 .separator--wrapper {
-    height: 6px;
+    height: 10px;
 }
 
 .separator--line {
     height: 2px;
-    margin: 2px 0;
+    position: relative;
+    top: 4px;
     pointer-events: none;
 }
 

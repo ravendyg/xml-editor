@@ -8,8 +8,9 @@ import {TModel} from 'client/types/dataTypes';
  * @param {string} treeRoot
  */
 export const searchInSubtree = (model: TModel, nodeId: string, treeRoot: string): boolean => {
-    console.log(nodeId, treeRoot);
-    if (nodeId === treeRoot) {
+    if (!treeRoot) {
+        return false;
+    } else if (nodeId === treeRoot) {
         return true;
     } else {
         const children = model[treeRoot].children;

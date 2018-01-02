@@ -1,6 +1,5 @@
 import {
     EErrorCodes,
-    EMoveDirections,
 } from 'client/types/enums';
 
 /**
@@ -81,12 +80,12 @@ export interface IError extends Error {
 }
 
 /**
- * @prop {string} key Node key
- * @prop {EMoveDirections} direction
+ * @prop {string} key Node being moved
+ * @prop {string} target Node relative to which the move has been done
  */
 export declare type TMoveInfo = {
     key: string;
-    direction: EMoveDirections;
+    target: string;
 };
 
 /**

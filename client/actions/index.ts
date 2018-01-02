@@ -14,7 +14,8 @@ export interface IActions {
     editNode: (nodeId: string) => void;
     loadDocumentList: () => void;
     hideAllModals: () => void;
-    moveNode: (moveInfo: TMoveInfo) => void;
+    moveNodeToEnd: (moveInfo: TMoveInfo) => void;
+    moveNodeBefore: (moveInfo: TMoveInfo) => void;
     removeNode: (nodeId: string) => void;
     selectDocument: (docId: string) => void;
     updateNode: (nodeInfo: TNodeInfo) => void;
@@ -49,11 +50,20 @@ export const createActions = (store: IStore, documentService: IDocumentService):
 
     const hideAllModals = actionCreators.hideAllModals;
 
-    const moveNode = (moveInfo: TMoveInfo) => {
+    const moveNodeToEnd = (moveInfo: TMoveInfo) => {
         const { key } = moveInfo;
         if (key !== 'root') {
-            actionCreators.moveNode(moveInfo);
+            actionCreators.moveNodeToEnd(moveInfo);
         }
+        actionCreators.stopDrag();
+    };
+
+    const moveNodeBefore = (moveInfo: TMoveInfo) => {
+        const { key, target } = moveInfo;
+        if (key !== 'root' && target !== 'root') {
+            actionCreators.moveNodeBefore(moveInfo);
+        }
+        actionCreators.stopDrag();
     };
 
     const removeNode = (nodeId: string) => {
@@ -113,7 +123,8 @@ export const createActions = (store: IStore, documentService: IDocumentService):
         editNode,
         loadDocumentList,
         hideAllModals,
-        moveNode,
+        moveNodeBefore,
+        moveNodeToEnd,
         removeNode,
         selectDocument,
         showNodeContextMenu,

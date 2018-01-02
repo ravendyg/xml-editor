@@ -84,7 +84,8 @@ export const Node = (props: IProps): JSX.Element | null => {
                             actions={actions}
                             draggedElement={draggedElement}
                             id={id}
-                            model={model} tail
+                            model={model}
+                            tail
                         />
                     )
                     : null
