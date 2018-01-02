@@ -2,10 +2,9 @@ import {
     EDocumentActions,
     TDocumentAction,
 } from 'client/types/actions';
-import {
-    ELoadStatus,
-} from 'client/types/enums';
+import { ELoadStatus } from 'client/types/enums';
 import { IActiveDocument } from 'client/types/state';
+import { assertNever } from 'client/utils/assertNever';
 
 export const activeDocument = (
     state: IActiveDocument = getDefaultDocumentList(),
@@ -68,7 +67,7 @@ export const activeDocument = (
             }
             break;
         }
-        case EDocumentActions.REMOVE_NODE_TO_END: {
+        case EDocumentActions.REMOVE_NODE: {
             // remove node itself and a ref from the parent
             const key = action.payload;
             const { data } = state;
@@ -138,7 +137,7 @@ export const activeDocument = (
             };
             break;
         }
-        // TODO:  maybe remove repetitive code?
+        // TODO: maybe remove repetitive code?
         case EDocumentActions.MOVE_NODE_BEFORE: {
             const { key, target } = action.payload;
             const { data } = state;
@@ -223,6 +222,15 @@ export const activeDocument = (
                 };
             }
             break;
+        }
+        case EDocumentActions.EDIT_EXISTING_NODE:
+        case EDocumentActions.STOP_EDITING: {
+            // because use the same set of actions for different reducers
+            // will it go away with introducing editing mode?
+            break;
+        }
+        default: {
+            assertNever(action);
         }
     }
 

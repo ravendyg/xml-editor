@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import { IActions } from 'client/actions';
 import { TModel } from 'client/types/dataTypes';
-import { searchInSubtree } from 'client/utils';
+import { searchInSubtree } from 'client/utils/searchInSubtree';
 
 /**
  * @prop {IActions} actions All actions connected to redux

@@ -11,10 +11,8 @@ import {
     TNode,
     TNodeInfo,
 } from 'client/types/dataTypes';
-import {
-    createNodeKey,
-    parseEditInput,
-} from 'client/utils';
+import { createNodeKey } from 'client/utils/generators';
+import { parseEditInput } from 'client/utils/parseEditInput';
 
 /**
  * @prop {IActions} actions All actions

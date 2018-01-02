@@ -4,12 +4,13 @@ import {
 } from 'client/types/actions';
 import { ELoadStatus } from 'client/types/enums';
 import { IDocumentList } from 'client/types/state';
+import { assertNever } from 'client/utils/assertNever';
 
 export const documentList = (
     state: IDocumentList = getDefaultDocumentList(),
     action: TDocumentListAction,
 ): IDocumentList => {
-    let newState: IDocumentList;
+    let newState = state;
 
     switch (action.type) {
         case EDocumentListActions.LOAD_START: {
@@ -37,7 +38,7 @@ export const documentList = (
             break;
         }
         default: {
-            return state;
+            assertNever(action);
         }
     }
 

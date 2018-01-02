@@ -38,7 +38,7 @@ export const enum EDocumentActions {
     MOVE_NODE_TO_END = 'MOVE_NODE_TO_END',
     MOVE_NODE_BEFORE = 'MOVE_NODE_BEFORE',
     UPDATE_NODE = 'UPDATE_NODE',
-    REMOVE_NODE_TO_END = 'REMOVE_NODE_TO_END',
+    REMOVE_NODE = 'REMOVE_NODE',
 }
 
 export declare type TDocumentAction =
@@ -51,7 +51,7 @@ export declare type TDocumentAction =
     | IAction<EDocumentActions.MOVE_NODE_TO_END, TMoveInfo>
     | IAction<EDocumentActions.MOVE_NODE_BEFORE, TMoveInfo>
     | IAction<EDocumentActions.UPDATE_NODE, TNodeInfo>
-    | IAction<EDocumentActions.REMOVE_NODE_TO_END, string>
+    | IAction<EDocumentActions.REMOVE_NODE, string>
     ;
 
 export const enum ECashDocuments {

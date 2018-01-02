@@ -4,12 +4,13 @@ import {
 } from 'client/types/actions';
 import { EModalTypes } from 'client/types/enums';
 import { EModal } from 'client/types/state';
+import { assertNever } from 'client/utils/assertNever';
 
 export const modals = (
     state: EModal[] = getDefaultModals(),
     action: TModalsAction,
 ): EModal[] => {
-    let newState: EModal[];
+    let newState = state;
 
     switch (action.type) {
         case EModalsActions.SHOW_NODE_CONTEXT_MENU: {
@@ -24,7 +25,7 @@ export const modals = (
             break;
         }
         default: {
-            return state;
+            assertNever(action);
         }
     }
 

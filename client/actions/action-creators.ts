@@ -89,7 +89,7 @@ export const createActionCreators = (store: IStore): IActionCreators => ({
     },
 
     removeNode(payload: string) {
-        store.dispatch({ type: EDocumentActions.REMOVE_NODE_TO_END, payload });
+        store.dispatch({ type: EDocumentActions.REMOVE_NODE, payload });
     },
 
     startDocLoad() {
