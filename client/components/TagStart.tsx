@@ -85,13 +85,16 @@ export class TagStart extends React.PureComponent<IProps, IState> {
         nativeEvent.preventDefault();
     }
 
-    handleDrop = (e: React.SyntheticEvent<any>) => {
-        console.log(e.nativeEvent)
+    /**
+     * Handle drop element
+     */
+    handleDrop = () => {
         const {
+            actions: { moveNodeToEnd, },
             id,
             draggedElement,
         } = this.props;
-        console.log(id, draggedElement);
+        moveNodeToEnd({ key: draggedElement, target: id, });
     }
 
     /**
@@ -143,8 +146,8 @@ export class TagStart extends React.PureComponent<IProps, IState> {
             <span
                 className={'tag-start--tag'}
                 style={tagStyle}
-                onDrop={console.log}
-                onDropCapture={console.log}
+                onDragOver={this.handleDragover}
+                onDrop={this.handleDrop}
             >
                 {text}
             </span>
