@@ -4,7 +4,6 @@ import {
 } from 'client/types/actions';
 import {
     ELoadStatus,
-    EMoveDirections,
 } from 'client/types/enums';
 import { IActiveDocument } from 'client/types/state';
 
@@ -43,11 +42,12 @@ export const activeDocument = (
             const key = action.payload;
             const data = state.data;
             if (data && data.model[key]) {
-                const { attrs, children, parent, tagName } = data.model[key];
-                const { id, model, name } = data;
+                const { model } = data;
+                const { attrs, children, parent, tagName } = model[key];
                 newState = {
+                    ...state,
                     data: {
-                        id,
+                        ...data,
                         model: {
                             ...model,
                             [key]: {
@@ -63,20 +63,19 @@ export const activeDocument = (
                                 tagName: '',
                             },
                         },
-                        name,
                     },
-                    error: null,
-                    status: ELoadStatus.IDLE,
                 };
             }
             break;
         }
-        case EDocumentActions.REMOVE_NODE: {
+        case EDocumentActions.REMOVE_NODE_TO_END: {
             // remove node itself and a ref from the parent
             const key = action.payload;
-            const data = state.data;
-            if (data && data.model[key]) {
-                const { id, model, name } = data;
+            const { data } = state;
+            if (!data) { break; }
+
+            if (data.model[key]) {
+                const { model } = data;
                 const { parent } = model[key];
                 const parentNode = model[parent];
                 let newParent = {
@@ -91,74 +90,109 @@ export const activeDocument = (
                 };
                 delete newModel[key];
                 newState = {
+                    ...state,
                     data: {
-                        id,
+                        ...data,
                         model: newModel,
-                        name,
                     },
-                    error: null,
-                    status: ELoadStatus.IDLE,
                 };
             }
             break;
         }
-        case EDocumentActions.MOVE_NODE: {
-            const { direction, key } = action.payload;
-            const data = state.data;
-            if (data && data.model[key]) {
-                const { parent } = data.model[key];
-                const { children, ...rest } = data.model[parent];
-                const position = children.indexOf(key);
-                let newChildren;
-                // corner cases
-                if (position === -1) {
-                    throw new Error('Incorrect node key');
-                } else if (position === 0 && direction === EMoveDirections.UP) {
-                    newChildren = [...children.slice(1), key];
-                } else if (position === children.length - 1 && direction === EMoveDirections.DOWN) {
-                    newChildren = [key, ...children.slice(0, children.length - 1)];
-                // general
-                } else {
-                    newChildren = children.slice(0);
-                    let newIndex = position;
-                    if (direction === EMoveDirections.UP) {
-                        newIndex = position - 1;
-                    } else if (direction === EMoveDirections.DOWN) {
-                        newIndex = position + 1;
-                    }
-                    const tmp = newChildren[newIndex];
-                    newChildren[newIndex] = newChildren[position];
-                    newChildren[position] = tmp;
-                }
-                const { id, model, name } = data;
-                newState = {
-                    data: {
-                        id,
-                        model: {
-                            ...model,
-                            [parent]: {
-                                children: newChildren,
-                                ...rest,
-                            },
-                        },
-                        name,
-                    },
-                    error: null,
-                    status: ELoadStatus.IDLE,
-                };
-            }
+        case EDocumentActions.MOVE_NODE_TO_END: {
+            const { key, target } = action.payload;
+            const { data } = state;
+            if (!data) { break; }
+
+            const { model } = data;
+
+            const updatedElement = {
+                ...model[key],
+                parent: target,
+            };
+
+            const oldParentId = model[key].parent;
+            const oldParent = {
+                ...model[oldParentId],
+                children: model[oldParentId].children.filter(e => e !== key),
+            };
+
+            let newModel = {
+                ...model,
+                [oldParentId]: oldParent,
+                [key]: updatedElement,
+            };
+
+            // move inside one parent is an edge case
+            newModel[target] = {
+                ...newModel[target],
+                children: newModel[target].children.concat(key),
+            };
+
+            newState = {
+                ...state,
+                data: {
+                    ...data,
+                    model: newModel,
+                },
+            };
+            break;
+        }
+        // TODO:  maybe remove repetitive code?
+        case EDocumentActions.MOVE_NODE_BEFORE: {
+            const { key, target } = action.payload;
+            const { data } = state;
+            if (!data) { break; }
+
+            const { model } = data;
+            const newParentId = model[target].parent;
+
+            const updatedElement = {
+                ...model[key],
+                parent: newParentId,
+            };
+
+            const oldParentId = model[key].parent;
+            const oldParent = {
+                ...model[oldParentId],
+                children: model[oldParentId].children.filter(e => e !== key),
+            };
+
+            let newModel = {
+                ...model,
+                [oldParentId]: oldParent,
+                [key]: updatedElement,
+            };
+
+            const newSiblings = newModel[newParentId].children;
+            const targetPosition = newSiblings.indexOf(target);
+            const newChildren = [
+                ...newSiblings.slice(0, targetPosition),
+                key,
+                ...newSiblings.slice(targetPosition),
+            ];
+            newModel[newParentId] = {
+                ...newModel[newParentId],
+                children: newChildren,
+            };
+
+            newState = {
+                ...state,
+                data: {
+                    ...data,
+                    model: newModel,
+                },
+            };
             break;
         }
         case EDocumentActions.UPDATE_NODE: {
             const { key, attrs, tagName, parent } = action.payload;
             const { data } = state;
-            if (!data) {
-                // not sure how we came here
-                break;
-            }
+            if (!data) { break; }
+
             const realKey = data.model.empty ? 'empty' : key;
             if (data.model[realKey]) {
-                const { id, model, name } = data;
+                const { model } = data;
                 const { children } = model[realKey];
                 const newModel = {
                     ...model,
@@ -181,13 +215,11 @@ export const activeDocument = (
                     delete newModel.empty;
                 }
                 newState = {
+                    ...state,
                     data: {
-                        id,
+                        ...data,
                         model: newModel,
-                        name,
                     },
-                    error: null,
-                    status: ELoadStatus.IDLE,
                 };
             }
             break;

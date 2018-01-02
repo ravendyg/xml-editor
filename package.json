@@ -34,7 +34,7 @@
     "@types/react": "^16.0.25",
     "@types/react-dom": "^16.0.3",
     "@types/react-redux": "^5.0.14",
-    "@types/redux": "^3.6.0",
+    "@types/redux": "^3.6.31",
     "babel-core": "^6.26.0",
     "babel-loader": "^7.1.2",
     "babel-plugin-transform-object-rest-spread": "^6.26.0",

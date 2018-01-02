@@ -1,6 +1,5 @@
 import {
     EErrorCodes,
-    EMoveDirections,
 } from 'client/types/enums';
 
 /**
@@ -55,6 +54,11 @@ export declare type TNodeInfo = {
 };
 
 /**
+ * Complete model
+ */
+export declare type TModel = { [key: string]: TNode };
+
+/**
  * Complete document
  *
  * @prop {string} id Unique identifier
@@ -63,9 +67,7 @@ export declare type TNodeInfo = {
 export declare type TCompleteDocument = {
     id: string;
     name: string;
-    model: {
-        [key: string]: TNode;
-    };
+    model: TModel;
 };
 
 /**
@@ -78,12 +80,12 @@ export interface IError extends Error {
 }
 
 /**
- * @prop {string} key Node key
- * @prop {EMoveDirections} direction
+ * @prop {string} key Node being moved
+ * @prop {string} target Node relative to which the move has been done
  */
 export declare type TMoveInfo = {
     key: string;
-    direction: EMoveDirections;
+    target: string;
 };
 
 /**

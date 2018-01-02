@@ -11,14 +11,37 @@ body {
     }
 }
 
-.tag-start, .tag-end {
-    margin: 5px 0;
+.view-wrapper {
+    padding-top: 10px;
 }
 
-.tag-start--btns {
-    button {
-        margin: 0 5px;
+.tag-start, .tag-end {
+    position: relative;
+}
+
+.tag-start {
+    &--tag {
+        pointer-events: none;
     }
+}
+
+.tag-start.hovered {
+    background-color: rgba(0, 0, 0, 0.2);
+}
+
+.separator--wrapper {
+    height: 10px;
+}
+
+.separator--line {
+    height: 2px;
+    position: relative;
+    top: 4px;
+    pointer-events: none;
+}
+
+.separator--line.active {
+    background-color: gray;
 }
 
 .modals-container {
@@ -45,4 +68,13 @@ body {
             background-color: gray;
         }
     }
+}
+
+.drag-overlay {
+    position: absolute;
+    pointer-events: none;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
 }

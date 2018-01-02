@@ -2,7 +2,6 @@ import * as React from 'react';
 
 import { IActions } from 'client/actions';
 import {
-    BTN_WIDTH,
     TAG_OFFSET,
     TAG_OFFSET_STEP,
 } from 'client/consts';
@@ -104,7 +103,7 @@ export class EditTag extends React.PureComponent<IProps, {}> {
             level
         } = this.props;
 
-        const offset = BTN_WIDTH + TAG_OFFSET + (level * TAG_OFFSET_STEP);
+        const offset = TAG_OFFSET + (level * TAG_OFFSET_STEP);
         const tagStyle = offset
             ? { marginLeft: offset + 'px' }
             : {}

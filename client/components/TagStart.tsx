@@ -5,60 +5,45 @@ import {
     TAG_OFFSET,
     TAG_OFFSET_STEP,
 } from 'client/consts';
-// import { KEY_CODES } from 'client/consts';
 import {
-    // TMaybeInput,
+    TModel,
     TNode,
-    // TNodeInfo,
 } from 'client/types/dataTypes';
-import { EMoveDirections } from 'client/types/enums';
-// import { parseEditInput } from 'client/utils';
+import { searchInSubtree } from 'client/utils';
 
 /**
  * @prop {IActions} actions All actions
+ * @prop {string} draggedElement An id of the element being dragged
  * @prop {string} id Node identifier
  * @prop {number} level How deep it is situated in the tree
+ * @prop {TModel} model Complete model, need for checks that the node is not being dragged inside itself
  * @prop {TNode} node
  */
 interface IProps {
     actions: IActions;
+    draggedElement: string;
     id: string;
     level: number;
+    model: TModel;
     node: TNode;
 }
 
+/**
+ * @prop {EHoverMode} hover
+ */
+interface IState {
+    hovered: boolean;
+}
+
 // TODO: remove move btns, replace with drag&drop
-export class TagStart extends React.PureComponent<IProps, {}> {
+export class TagStart extends React.PureComponent<IProps, IState> {
 
     constructor(props: IProps) {
         super(props);
         this.state = {
-            editedNode: false,
+            hovered: false,
         };
     }
-
-    /**
-     * Move this node
-     *
-     * @param {EMoveDirections} direction
-     */
-    moveNode = (direction: EMoveDirections) => {
-        const { actions: { moveNode }, id } = this.props;
-        moveNode({
-            key: id,
-            direction,
-        });
-    }
-
-    /**
-     * Move this node up
-     */
-    handleMoveUp = () => this.moveNode(EMoveDirections.UP);
-
-    /**
-     * Move this node down
-     */
-    handleMoveDown = () => this.moveNode(EMoveDirections.DOWN);
 
     /**
      * Handle right click on the node start tag
@@ -72,6 +57,46 @@ export class TagStart extends React.PureComponent<IProps, {}> {
         showNodeContextMenu({id, x: clientX, y: clientY});
     }
 
+    handleDragEnter = () => {
+        this.setState({
+            hovered: true,
+        });
+    }
+
+    handleDragLeave = () => {
+        this.setState({
+            hovered: false,
+        });
+    }
+
+    /**
+     * Handle drag start
+     */
+    handleDragStart = () => {
+        const { actions: { startDrag }, id } = this.props;
+        startDrag(id);
+    }
+
+    /**
+     * Handle drag over, otherwise drop won't fire
+     */
+    handleDragover = (e: React.SyntheticEvent<any>) => {
+        const { nativeEvent } = e;
+        nativeEvent.preventDefault();
+    }
+
+    /**
+     * Handle drop element
+     */
+    handleDrop = () => {
+        const {
+            actions: { moveNodeToEnd, },
+            id,
+            draggedElement,
+        } = this.props;
+        moveNodeToEnd({ key: draggedElement, target: id, });
+    }
+
     /**
      * Toggle editor
      */
@@ -82,9 +107,13 @@ export class TagStart extends React.PureComponent<IProps, {}> {
 
     render() {
         const {
-            node: { attrs, children, tagName },
+            draggedElement,
+            id,
             level,
+            model,
+            node: { attrs, children, tagName },
         } = this.props;
+        const { hovered } = this.state;
 
         // does not display 'document' as a separate entity
         if (tagName === 'document') {
@@ -116,25 +145,36 @@ export class TagStart extends React.PureComponent<IProps, {}> {
         element = (
             <span
                 className={'tag-start--tag'}
-                onDoubleClick={this.toggleeditedNode}
                 style={tagStyle}
+                onDragOver={this.handleDragover}
+                onDrop={this.handleDrop}
             >
                 {text}
             </span>
         );
 
+        const className = 'tag-start' +
+            (hovered
+                && children.length === 0
+                && !searchInSubtree(model, id, draggedElement)
+                    ? ' hovered'
+                    : ''
+            )
+            ;
+
         return(
-            <div className="tag-start" onContextMenu={this.handleContextMenu} title="Right click for more options">
-                <span className="tag-start--btns">
-                    <button
-                        onClick={this.handleMoveUp}
-                        title="Move node up"
-                    >▲</button>
-                    <button
-                        onClick={this.handleMoveDown}
-                        title="Move node down"
-                    >▼</button>
-                </span>
+            <div
+                className={className}
+                draggable
+                onContextMenu={this.handleContextMenu}
+                onDoubleClick={this.toggleeditedNode}
+                onDragEnter={this.handleDragEnter}
+                onDragLeave={this.handleDragLeave}
+                onDragStart={this.handleDragStart}
+                onDragOver={this.handleDragover}
+                onDrop={this.handleDrop}
+                title="Right click for more options"
+            >
                 {element}
             </div>
         );

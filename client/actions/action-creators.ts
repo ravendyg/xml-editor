@@ -2,6 +2,7 @@ import {
     ECashDocuments,
     EDocumentActions,
     EDocumentListActions,
+    EDragActions,
     EModalsActions,
 } from 'client/types/actions';
 import {
@@ -29,7 +30,8 @@ export interface IActionCreators {
     addChild: TActionCreator<string>;
     editNode: TActionCreator<string>;
     errorDocLoad: TActionCreator<Error>;
-    moveNode: TActionCreator<TMoveInfo>;
+    moveNodeToEnd: TActionCreator<TMoveInfo>;
+    moveNodeBefore: TActionCreator<TMoveInfo>;
     removeNode: TActionCreator<string>;
     startDocLoad: TActionCreatorWithoutArgs;
     stopNodeEditing: TActionCreatorWithoutArgs;
@@ -37,6 +39,9 @@ export interface IActionCreators {
     // modals
     showNodeContextMenu: TActionCreator<TNodeContextMenu>;
     hideAllModals: TActionCreatorWithoutArgs;
+    // drag
+    startDrag: TActionCreator<string>;
+    stopDrag: TActionCreatorWithoutArgs;
 }
 
 export const createActionCreators = (store: IStore): IActionCreators => ({
@@ -75,12 +80,16 @@ export const createActionCreators = (store: IStore): IActionCreators => ({
         store.dispatch({ type: EDocumentActions.LOAD_ERROR, payload });
     },
 
-    moveNode(payload: TMoveInfo) {
-        store.dispatch({ type: EDocumentActions.MOVE_NODE, payload });
+    moveNodeToEnd(payload: TMoveInfo) {
+        store.dispatch({ type: EDocumentActions.MOVE_NODE_TO_END, payload });
+    },
+
+    moveNodeBefore(payload: TMoveInfo) {
+        store.dispatch({ type: EDocumentActions.MOVE_NODE_BEFORE, payload });
     },
 
     removeNode(payload: string) {
-        store.dispatch({ type: EDocumentActions.REMOVE_NODE, payload });
+        store.dispatch({ type: EDocumentActions.REMOVE_NODE_TO_END, payload });
     },
 
     startDocLoad() {
@@ -103,4 +112,14 @@ export const createActionCreators = (store: IStore): IActionCreators => ({
     hideAllModals() {
         store.dispatch({ type: EModalsActions.HIDE_ALL_MODALS, payload: null });
     },
+
+    // drag
+    startDrag(payload: string) {
+        store.dispatch({ type: EDragActions.START_DRAG, payload });
+    },
+
+    stopDrag() {
+        store.dispatch({ type: EDragActions.STOP_DRAG, payload: null });
+    },
+
 });

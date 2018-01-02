@@ -1,7 +1,6 @@
 import * as React from 'react';
 
 import {
-    BTN_WIDTH,
     TAG_OFFSET,
     TAG_OFFSET_STEP,
 } from 'client/consts';
@@ -22,15 +21,15 @@ export const TagEnd = ({ node: { tagName }, level }: IProps) => {
         return null;
     }
 
-    const offset = BTN_WIDTH + TAG_OFFSET + (level * TAG_OFFSET_STEP);
+    const offset = TAG_OFFSET + (level * TAG_OFFSET_STEP);
     const tagStyle = offset
         ? { marginLeft: offset + 'px' }
         : {}
         ;
 
     return(
-        <div>
-            <span className="tag-end" style={tagStyle}>{`</${tagName}>`}</span>
+        <div className="tag-end">
+            <span style={tagStyle}>{`</${tagName}>`}</span>
         </div>
     );
 };
