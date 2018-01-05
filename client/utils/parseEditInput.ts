@@ -1,4 +1,7 @@
-import { TAttribute } from 'client/types/dataTypes';
+import {
+    IConstArray,
+    TAttribute,
+} from 'client/types/dataTypes';
 
 const notAllowedSymbols = /[^=":;#@a-zA-Z0-9_-\s]/g;
 const allowedInNameSymbols = /[a-zA-Z-_]/;
@@ -69,7 +72,7 @@ const parseAttribute = (input: string): TAttribute => {
  * @param {string} input
  */
 export const parseEditInput = (input: string) => {
-    let attrs: TAttribute [] = [];
+    let attrs: TAttribute[] = [];
 
     const sanitized = input.replace(notAllowedSymbols, '').replace(/\s/g, ' ');
     let { tagName, rest } = getTagName(sanitized);
@@ -81,7 +84,7 @@ export const parseEditInput = (input: string) => {
     }
 
     return {
-        attrs,
+        attrs: attrs as IConstArray<TAttribute>,
         tagName,
     };
 };

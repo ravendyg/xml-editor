@@ -1,6 +1,7 @@
 import { Store } from 'redux';
 
 import {
+    IConstArray,
     TCompleteDocument,
     TDocumentInfo,
 } from 'client/types/dataTypes';
@@ -28,7 +29,7 @@ export interface IState {
     editedNode: string;
     cacheDocument: ICashDocument;
     documentList: IDocumentList;
-    modals: EModal[];
+    modals: IConstArray<EModal>;
 }
 
 /**
@@ -39,12 +40,12 @@ export declare type TDispatch = Dispatch<IState>;
 /**
  * Maybe list of existing documents
  *
- * @prop {TDocumentInfo []} data List of available document
+ * @prop {IConstArray<TDocumentInfo>} data List of available document
  * @prop {IError | null} error
  * @prop {ELoadStatus} status Request status
  */
 export interface IDocumentList {
-    data: TDocumentInfo [];
+    data: IConstArray<TDocumentInfo>;
     error: IError | null;
     status: ELoadStatus;
 }

@@ -2,14 +2,15 @@ import {
     EModalsActions,
     TModalsAction,
 } from 'client/types/actions';
+import { IConstArray } from 'client/types/dataTypes';
 import { EModalTypes } from 'client/types/enums';
 import { EModal } from 'client/types/state';
 import { assertNever } from 'client/utils/assertNever';
 
 export const modals = (
-    state: EModal[] = getDefaultModals(),
+    state: IConstArray<EModal> = getDefaultModals(),
     action: TModalsAction,
-): EModal[] => {
+): IConstArray<EModal> => {
     let newState = state;
 
     switch (action.type) {
@@ -32,6 +33,6 @@ export const modals = (
     return newState;
 };
 
-export function getDefaultModals(): EModal[] {
+export function getDefaultModals(): IConstArray<EModal> {
     return [];
 }

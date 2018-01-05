@@ -3,6 +3,41 @@ import {
 } from 'client/types/enums';
 
 /**
+ * Really constant array
+ *
+ * https://github.com/Microsoft/TypeScript/issues/2426
+ * The author wouldn't recommend to use it, but I'm just curious how far can one go
+ *
+ * Therefore had to reimplement 'Iterable' lost when passing through 'Omit'
+ * http://exploringjs.com/es6/ch_iteration.html
+ */
+interface Iterable<T> {
+    [Symbol.iterator]() : Iterator<T>;
+}
+interface Iterator<T> {
+    next() : IteratorResult<T>;
+}
+interface IteratorResult<T> {
+    value: T;
+    done: boolean;
+}
+
+type StringLiteralDiff<T extends string, U extends string> = ({[P in T]: P } & {[P in U]: never } & { [x: string]: never })[T];
+type Omit<T, K extends keyof T> = Pick<T, StringLiteralDiff<keyof T, K>>;
+
+/**
+ * loosing sort is a pity, but it mutates the array, use
+ * const a: IConstArray<number> = [/ members /];
+ * let b: number[] = [...a];
+ * const c: IConstArray<number> = b.sort((e1, e2) => e1 - e2);
+ */
+export interface IConstArray<T> extends
+    Omit<Array<T>, 'push' | 'pop' | 'shift' | 'unshift' | 'sort'>,
+    Iterable<T> {
+        readonly [n: number]: T;
+    }
+
+/**
  * List of available documents
  *
  * @prop {string} name File name
@@ -27,14 +62,14 @@ export declare type TAttribute = {
 /**
  * Node === tag
  *
- * @prop {TAttribute[]} attrs
- * @prop {string[]} children Children ids
+ * @prop {IConstArray<TAttribute>} attrs
+ * @prop {IConstArray<string>} children Children ids
  * @prop {string} parent Node parent
  * @prop {string} tagName Like div, span, etc.
  */
 export declare type TNode = {
-    attrs: TAttribute[];
-    children: string[];
+    attrs: IConstArray<TAttribute>;
+    children: IConstArray<string>;
     parent: string;
     tagName: string;
 };
@@ -42,12 +77,12 @@ export declare type TNode = {
 /**
  * Transport container for node update info (children not included)
  *
- * @prop {TAttribute[]} attrs
+ * @prop {IConstArray<TAttribute>} attrs
  * @prop {string} parent Node parent
  * @prop {string} tagName Like div, span, etc.
  */
 export declare type TNodeInfo = {
-    attrs: TAttribute[];
+    attrs: IConstArray<TAttribute>;
     key: string;
     parent: string;
     tagName: string;

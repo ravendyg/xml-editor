@@ -6,6 +6,7 @@ import {
     EModalsActions,
 } from 'client/types/actions';
 import {
+    IConstArray,
     TCompleteDocument,
     TDocumentInfo,
     TMoveInfo,
@@ -23,7 +24,7 @@ export interface IActionCreators {
     addDocument: TActionCreator<TCompleteDocument | null>;
     // list
     confirmDocLoad: TActionCreator<TCompleteDocument | null>;
-    confirmListLoad: TActionCreator<TDocumentInfo[]>;
+    confirmListLoad: TActionCreator<IConstArray<TDocumentInfo>>;
     errorListLoad: TActionCreator<Error>;
     startListLoad: TActionCreatorWithoutArgs;
     // document
@@ -55,7 +56,7 @@ export const createActionCreators = (store: IStore): IActionCreators => ({
         store.dispatch({ type: EDocumentActions.LOAD_SUCCESS, payload });
     },
 
-    confirmListLoad(payload: TDocumentInfo[]) {
+    confirmListLoad(payload: IConstArray<TDocumentInfo>) {
         store.dispatch({ type: EDocumentListActions.LOAD_SUCCESS, payload });
     },
 

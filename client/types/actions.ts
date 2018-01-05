@@ -5,6 +5,7 @@ import {
     TDocumentInfo,
 } from 'client/types/dataTypes';
 import {
+    IConstArray,
     IError,
     TMoveInfo,
     TNodeContextMenu,
@@ -24,7 +25,7 @@ export const enum EDocumentListActions {
 
 export declare type TDocumentListAction =
     IAction<EDocumentListActions.LOAD_START, null>
-    | IAction<EDocumentListActions.LOAD_SUCCESS, TDocumentInfo[]>
+    | IAction<EDocumentListActions.LOAD_SUCCESS, IConstArray<TDocumentInfo>>
     | IAction<EDocumentListActions.LOAD_ERROR, IError>
     ;
 

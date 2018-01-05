@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 
 import { IActions } from 'client/actions';
 import { NodeContextMenu } from 'client/components/NodeContextMenu';
+import { IConstArray } from 'client/types/dataTypes';
 import { EModalTypes } from 'client/types/enums';
 import {
     EModal,
@@ -26,7 +27,7 @@ const hasAmongParent = (node: HTMLElement | null, attrName: string, attrRegexp: 
     }
 };
 
-const mapModalInfoToComponents = (modals: EModal[], actions: IActions) => {
+const mapModalInfoToComponents = (modals: IConstArray<EModal>, actions: IActions) => {
     return modals
     .map((modal, index) => {
         switch (modal.type) {
@@ -57,12 +58,12 @@ interface IOwnProps {
 }
 
 /**
- * @prop {string} id An id of the node menu was opened on
- * @prop {boolean} open Context menu open
+ * @prop {Document} doc Global document
+ * @prop {IConstArray<EModal>} modals List of modal windows
  */
 interface IProps extends IOwnProps {
     doc: Document;
-    modals: EModal[];
+    modals: IConstArray<EModal>;
 }
 
 // don't mix up a container containing modal windows and a container aka HOC
