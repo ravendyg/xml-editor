@@ -25,7 +25,7 @@ export const editedNode = (
             break;
         }
         case EDocumentActions.MOVE_NODE_BEFORE:
-        case EDocumentActions.MOVE_NODE_TO_END:
+        case EDocumentActions.MOVE_NODE_TO_START:
         case EDocumentActions.REMOVE_NODE:
         case EDocumentActions.LOAD_START:
         case EDocumentActions.LOAD_SUCCESS:

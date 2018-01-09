@@ -63,21 +63,26 @@ export class Separator extends React.Component<IProps, IState> {
         const {
             actions: {
                 moveNodeBefore,
-                moveNodeToEnd,
+                moveNodeToStart,
             },
             id,
             droppable,
             tail = false,
         } = this.props;
+        if (this.state.hovered) {
+            this.setState({
+                hovered: false,
+            });
+        }
         if (droppable) {
-            const moveAction = tail ? moveNodeToEnd : moveNodeBefore;
+            const moveAction = tail ? moveNodeToStart : moveNodeBefore;
             moveAction(id);
         }
     }
 
     render() {
         const className = 'separator--line'
-            + (this.state.hovered ? ' hovered' : '')
+            + (this.state.hovered ? ' hovered' : '' )
             ;
 
         return(

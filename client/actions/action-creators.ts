@@ -30,7 +30,7 @@ export interface IActionCreators {
     addChild: TActionCreator<string>;
     editNode: TActionCreator<string>;
     errorDocLoad: TActionCreator<Error>;
-    moveNodeToEnd: TActionCreator<TMoveInfo>;
+    moveNodeToStart: TActionCreator<TMoveInfo>;
     moveNodeBefore: TActionCreator<TMoveInfo>;
     removeNode: TActionCreator<string>;
     startDocLoad: TActionCreatorWithoutArgs;
@@ -80,8 +80,8 @@ export const createActionCreators = (store: IStore): IActionCreators => ({
         store.dispatch({ type: EDocumentActions.LOAD_ERROR, payload });
     },
 
-    moveNodeToEnd(payload: TMoveInfo) {
-        store.dispatch({ type: EDocumentActions.MOVE_NODE_TO_END, payload });
+    moveNodeToStart(payload: TMoveInfo) {
+        store.dispatch({ type: EDocumentActions.MOVE_NODE_TO_START, payload });
     },
 
     moveNodeBefore(payload: TMoveInfo) {

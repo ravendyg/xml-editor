@@ -98,7 +98,7 @@ export const activeDocument = (
             }
             break;
         }
-        case EDocumentActions.MOVE_NODE_TO_END: {
+        case EDocumentActions.MOVE_NODE_TO_START: {
             const { key, target } = action.payload;
             const { data } = state;
             if (!data) { break; }
@@ -125,7 +125,7 @@ export const activeDocument = (
             // move inside one parent is an edge case
             newModel[target] = {
                 ...newModel[target],
-                children: newModel[target].children.concat(key),
+                children: [key].concat(newModel[target].children),
             };
 
             newState = {
