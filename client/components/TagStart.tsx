@@ -52,8 +52,8 @@ export class TagStart extends React.PureComponent<IProps, IState> {
     }
 
     handleDragEnter = () => {
-        const { droppable, node: { children } } = this.props;
-        if (droppable && children.length === 0) {
+        const { droppable } = this.props;
+        if (droppable) {
             this.setState({
                 hovered: true,
             });
@@ -92,12 +92,17 @@ export class TagStart extends React.PureComponent<IProps, IState> {
      */
     handleDrop = () => {
         const {
-            actions: { moveNodeToEnd },
+            actions: { moveNodeToStart },
             id,
             droppable,
         } = this.props;
+        if (this.state.hovered) {
+            this.setState({
+                hovered: false,
+            });
+        }
         if (droppable) {
-            moveNodeToEnd(id);
+            moveNodeToStart(id);
         }
     }
 

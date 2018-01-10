@@ -35,7 +35,7 @@ export const enum EDocumentActions {
     ADD_EMPTY_CHILD = 'ADD_EMPTY_CHILD',
     EDIT_EXISTING_NODE = 'EDIT_EXISTING_NODE',
     STOP_EDITING = 'STOP_EDITING',
-    MOVE_NODE_TO_END = 'MOVE_NODE_TO_END',
+    MOVE_NODE_TO_START = 'MOVE_NODE_TO_START',
     MOVE_NODE_BEFORE = 'MOVE_NODE_BEFORE',
     UPDATE_NODE = 'UPDATE_NODE',
     REMOVE_NODE = 'REMOVE_NODE',
@@ -48,7 +48,7 @@ export declare type TDocumentAction =
     | IAction<EDocumentActions.ADD_EMPTY_CHILD, string>
     | IAction<EDocumentActions.STOP_EDITING, null>
     | IAction<EDocumentActions.EDIT_EXISTING_NODE, string>
-    | IAction<EDocumentActions.MOVE_NODE_TO_END, TMoveInfo>
+    | IAction<EDocumentActions.MOVE_NODE_TO_START, TMoveInfo>
     | IAction<EDocumentActions.MOVE_NODE_BEFORE, TMoveInfo>
     | IAction<EDocumentActions.UPDATE_NODE, TNodeInfo>
     | IAction<EDocumentActions.REMOVE_NODE, string>

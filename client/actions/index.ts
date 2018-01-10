@@ -13,7 +13,7 @@ export interface IActions {
     editNode: (nodeId: string) => void;
     loadDocumentList: () => void;
     hideAllModals: () => void;
-    moveNodeToEnd: (target: string) => void;
+    moveNodeToStart: (target: string) => void;
     moveNodeBefore: (target: string) => void;
     removeNode: (nodeId: string) => void;
     selectDocument: (docId: string) => void;
@@ -49,10 +49,10 @@ export const createActions = (store: IStore, documentService: IDocumentService):
 
     const hideAllModals = actionCreators.hideAllModals;
 
-    const moveNodeToEnd = (target: string) => {
+    const moveNodeToStart = (target: string) => {
         const key = store.getState().drag;
         if (key !== 'root') {
-            actionCreators.moveNodeToEnd({ key, target, });
+            actionCreators.moveNodeToStart({ key, target, });
         }
         actionCreators.stopDrag();
     };
@@ -123,7 +123,7 @@ export const createActions = (store: IStore, documentService: IDocumentService):
         loadDocumentList,
         hideAllModals,
         moveNodeBefore,
-        moveNodeToEnd,
+        moveNodeToStart,
         removeNode,
         selectDocument,
         showNodeContextMenu,
